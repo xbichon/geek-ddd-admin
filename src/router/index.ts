@@ -1,0 +1,44 @@
+import { createRouter, createWebHistory } from 'vue-router'
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      component: () => import('@/layouts/Main/Index.vue'),
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: () => import('@/views/Home/index.vue'),
+          meta: { title: '首页' }
+        },
+        {
+          path: 'manager',
+          name: 'manager',
+          children: [
+            {
+              path: 'department',
+              name: 'manager-department',
+              component: () => import('@/views/Manager/Department/index.vue'),
+              meta: { title: '部门管理' }
+            },
+            {
+              path: 'user',
+              name: 'manager-user',
+              component: () => import('@/views/Manager/User/index.vue'),
+              meta: { title: '用户管理' }
+            },
+          ]
+        }
+      ]
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/Login.vue'),
+    }
+  ],
+})
+
+export default router

@@ -1,0 +1,49 @@
+// Ant Design 主题色
+$primary-color: #1890ff;
+$success-color: #52c41a;
+$warning-color: #faad14;
+$error-color: #f5222d;
+
+// 中性色
+$heading-color: #262626;
+$text-color: #595959;
+$text-color-secondary: #8c8c8c;
+$disabled-color: #bfbfbf;
+
+// 背景色
+$body-background: #f0f2f5;
+$component-background: #fff;
+$layout-header-background: #001529;
+
+// 边框色
+$border-color-base: #d9d9d9;
+$border-color-split: #f0f0f0;
+
+// 阴影
+$box-shadow-base: 0 1px 4px rgba(0, 21, 41, 0.08);
+$box-shadow-card: 0 1px 2px -2px rgba(0, 0, 0, 0.16),
+                 0 3px 6px 0 rgba(0, 0, 0, 0.12),
+                 0 5px 12px 4px rgba(0, 0, 0, 0.09);
+
+// 尺寸
+$layout-header-height: 60px;
+$layout-sidebar-width: 200px;
+$layout-sidebar-collapsed-width: 64px;
+
+// 间距
+$padding-base: 16px;
+$padding-sm: 8px;
+$padding-xs: 4px;
+
+// 圆角
+$border-radius-base: 6px;
+$border-radius-sm: 4px;
+
+// 字体
+$font-size-base: 14px;
+$font-size-lg: 16px;
+$font-size-sm: 12px;
+
+// 动画
+$ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+$transition-duration: 0.3s;
