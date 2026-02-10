@@ -72,7 +72,7 @@ onMounted(() => {
 // 刷新验证码
 const refreshCaptcha = async () => {
   try {
-    const response = await http.get('/auth/captcha');
+    const response = await http.get('/security/auth/captcha');
     captchaData.key = response.key;
     captchaData.data = response.data;
   } catch (error) {
@@ -84,7 +84,7 @@ const submitForm = async () => {
   if (!loginFormRef.value || !(await loginFormRef.value.validate())) return;
 
   try {
-    const response = await http.post('/auth/login', {
+    const response = await http.post('/security/auth/login', {
       userType: 'teacher',
       identifier: loginInfo.username,
       password: loginInfo.password,
