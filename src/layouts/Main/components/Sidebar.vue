@@ -43,8 +43,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { menuService } from '@/layouts/Main/services/menu'
-import type { MenuItem } from '@/data/menu'
+import { menuService, type MenuItem } from '@/services/menu'
 import { ElMessage, type MenuItemClicked } from 'element-plus'
 
 interface Props {
