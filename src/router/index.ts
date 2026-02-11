@@ -30,6 +30,18 @@ const router = createRouter({
               meta: { title: '用户管理' }
             },
           ]
+        },
+        {
+          path: 'internship',
+          name: 'internship',
+          children: [
+            {
+              path: 'topic',
+              name: 'internship-topic',
+              component: () => import('@/views/internship/index.vue'),
+              meta: { title: '选题管理' }
+            },
+          ]
         }
       ]
     },

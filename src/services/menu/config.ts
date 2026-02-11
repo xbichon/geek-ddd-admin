@@ -44,8 +44,8 @@ const menuData: MenuItem[] = [
             {
                 title: '选题管理',
                 type: 'MENU',
-                name: 'manager-department',
-                // permission: 'manager:department:read',
+                name: 'internship-topic',
+                // permission: 'internship:topic:read',
             }
         ]
     }
