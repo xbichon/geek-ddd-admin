@@ -85,7 +85,7 @@ const submitForm = async () => {
 
   try {
     const response = await http.post('/security/auth/login', {
-      userType: 'teacher',
+      userType: 'TEACHER',
       identifier: loginInfo.username,
       password: loginInfo.password,
       captchaKey: captchaData.key,
