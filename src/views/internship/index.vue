@@ -27,18 +27,19 @@
     <!-- 表格区域 -->
     <el-card shadow="never" class="table-card">
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
-        <el-table-column type="selection" width="55"></el-table-column>
-        <el-table-column prop="selectionId" label="ID" width="60"></el-table-column>
-        <el-table-column prop="studentName" label="姓名" width="100"></el-table-column>
+        <!-- <el-table-column type="selection" width="55"></el-table-column> -->
+        <el-table-column prop="selectionId" label="ID" width="40"></el-table-column>
         <el-table-column prop="studentNumber" label="学号" width="140"></el-table-column>
-        <el-table-column prop="thesisTitle" label="论文选题" min-width="150"></el-table-column>
+        <el-table-column prop="studentName" label="姓名" width="80"></el-table-column>
+        <el-table-column prop="className" label="班级" width="150"></el-table-column>
         <el-table-column prop="advisorName" label="指导老师" width="100"></el-table-column>
-        <el-table-column prop="groupMembers" label="小组成员" min-width="150"></el-table-column>
+        <el-table-column prop="thesisTitle" label="论文选题" width="140"></el-table-column>
         <el-table-column prop="achievementType" label="成果形式" width="100">
           <template #default="scope">
             <el-tag type="primary">{{ scope.row.achievementType }}</el-tag>
           </template>
         </el-table-column>
+
         <el-table-column prop="selectionType" label="选题类型" width="100">
           <template #default="scope">
             <el-tag :type="scope.row.selectionType === 'INDIVIDUAL' ? 'success' : 'warning'">
@@ -46,19 +47,16 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column prop="groupMembers" label="小组成员" min-width="150"></el-table-column>
+
+
       </el-table>
 
       <!-- 分页 -->
       <div class="pagination-container">
-        <el-pagination
-          v-model:current-page="pagination.pageNum"
-          v-model:page-size="pagination.pageSize"
-          :page-sizes="[10, 20, 50]"
-          :total="pagination.total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        />
+        <el-pagination v-model:current-page="pagination.pageNum" v-model:page-size="pagination.pageSize"
+          :page-sizes="[10, 20, 50]" :total="pagination.total" layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleSizeChange" @current-change="handleCurrentChange" />
       </div>
     </el-card>
   </div>
@@ -79,6 +77,7 @@ interface SelectionRecord {
   studentName: string
   studentNumber: string
   groupMembers: string
+  className: string  // 新增班级名称字段
 }
 
 interface PaginationData {
@@ -123,11 +122,11 @@ const fetchData = async () => {
       }
     })
 
-      const data: PaginationData = res
-      tableData.value = data.records
-      pagination.total = data.total
-      pagination.pageNum = data.pageNum
-      pagination.pageSize = data.pageSize
+    const data: PaginationData = res
+    tableData.value = data.records
+    pagination.total = data.total
+    pagination.pageNum = data.pageNum
+    pagination.pageSize = data.pageSize
 
   } catch (error) {
     console.error('获取数据失败:', error)
