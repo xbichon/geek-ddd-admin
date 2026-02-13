@@ -5,7 +5,36 @@
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="论文选题">
           <el-select v-model="searchForm.topic" placeholder="请选择论文选题" style="width: 160px;">
-            <el-option label="软件设计" value="软件设计"></el-option>
+            <el-option 
+              v-for="thesis in thesisList" 
+              :key="thesis.id" 
+              :label="thesis.title" 
+              :value="thesis.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <!-- 新增指导老师下拉筛选 -->
+        <el-form-item label="指导老师">
+          <el-select v-model="searchForm.advisor" placeholder="请选择指导老师" style="width: 140px;" clearable>
+            <el-option 
+              v-for="advisor in advisorList" 
+              :key="advisor" 
+              :label="advisor" 
+              :value="advisor">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <!-- 新增班级下拉筛选 -->
+        <el-form-item label="班级">
+          <el-select v-model="searchForm.className" placeholder="请选择班级" style="width: 140px;" clearable>
+            <el-option 
+              v-for="className in classList" 
+              :key="className" 
+              :label="className" 
+              :value="className">
+            </el-option>
           </el-select>
         </el-form-item>
 
@@ -80,6 +109,14 @@ interface SelectionRecord {
   className: string  // 新增班级名称字段
 }
 
+interface ThesisItem {
+  id: number
+  title: string
+  maxSelections: number
+  currentSelections: number
+  achievementTypes: string[]
+}
+
 interface PaginationData {
   records: SelectionRecord[]
   total: number
@@ -91,15 +128,26 @@ interface PaginationData {
 // 加载状态
 const loading = ref(false)
 
-// 搜索表单数据
+// 搜索表单数据 - 新增指导老师和班级字段
 const searchForm = reactive({
   topic: '',
   name: '',
-  studentId: ''
+  studentId: '',
+  advisor: '',  // 指导老师筛选
+  className: '' // 班级筛选
 })
 
 // 表格数据
 const tableData = ref<SelectionRecord[]>([])
+
+// 论文列表数据
+const thesisList = ref<ThesisItem[]>([])
+
+// 指导老师列表数据
+const advisorList = ref<string[]>([])
+
+// 班级列表数据
+const classList = ref<string[]>([])
 
 // 分页数据
 const pagination = reactive({
@@ -114,11 +162,10 @@ const fetchData = async () => {
   try {
     const res = await http.get('internship/thesis/selectionList', {
       params: {
-        // page:{
-        //     pageNum: pagination.pageNum,
-        //     pageSize: pagination.pageSize
-        // },
         studentName: searchForm.name || undefined,
+        advisorName: searchForm.advisor || undefined,
+        className: searchForm.className || undefined,
+        thesisId: searchForm.topic || undefined  // 使用论文ID作为筛选条件
       }
     })
 
@@ -146,6 +193,8 @@ const handleReset = () => {
   searchForm.topic = ''
   searchForm.name = ''
   searchForm.studentId = ''
+  searchForm.advisor = ''   // 重置指导老师筛选
+  searchForm.className = ''  // 重置班级筛选
   pagination.pageNum = 1
   fetchData()
 }
@@ -163,8 +212,41 @@ const handleCurrentChange = (val: number) => {
   fetchData()
 }
 
+// 获取论文列表数据
+const fetchThesisList = async () => {
+  try {
+    const res = await http.get('internship/thesis/list')
+    thesisList.value = res
+  } catch (error) {
+    console.error('获取论文列表失败:', error)
+  }
+}
+
+// 获取指导老师列表数据
+const fetchAdvisorList = async () => {
+  try {
+    const res = await http.get('internship/thesis/advisorNames')
+    advisorList.value = res
+  } catch (error) {
+    console.error('获取指导老师列表失败:', error)
+  }
+}
+
+// 获取班级列表数据
+const fetchClassList = async () => {
+  try {
+    const res = await http.get('internship/thesis/classNames')
+    classList.value = res
+  } catch (error) {
+    console.error('获取班级列表失败:', error)
+  }
+}
+
 // 初始化加载数据
 onMounted(() => {
+  fetchThesisList() // 初始化时获取论文列表
+  fetchAdvisorList() // 初始化时获取指导老师列表
+  fetchClassList()   // 初始化时获取班级列表
   fetchData()
 })
 </script>
