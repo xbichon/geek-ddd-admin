@@ -5,11 +5,7 @@
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="论文选题">
           <el-select v-model="searchForm.topic" placeholder="请选择论文选题" style="width: 160px;">
-            <el-option 
-              v-for="thesis in thesisList" 
-              :key="thesis.id" 
-              :label="thesis.title" 
-              :value="thesis.id">
+            <el-option v-for="thesis in thesisList" :key="thesis.id" :label="thesis.title" :value="thesis.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -17,11 +13,7 @@
         <!-- 新增指导老师下拉筛选 -->
         <el-form-item label="指导老师">
           <el-select v-model="searchForm.advisor" placeholder="请选择指导老师" style="width: 140px;" clearable>
-            <el-option 
-              v-for="advisor in advisorList" 
-              :key="advisor" 
-              :label="advisor" 
-              :value="advisor">
+            <el-option v-for="advisor in advisorList" :key="advisor" :label="advisor" :value="advisor">
             </el-option>
           </el-select>
         </el-form-item>
@@ -29,11 +21,7 @@
         <!-- 新增班级下拉筛选 -->
         <el-form-item label="班级">
           <el-select v-model="searchForm.className" placeholder="请选择班级" style="width: 140px;" clearable>
-            <el-option 
-              v-for="className in classList" 
-              :key="className" 
-              :label="className" 
-              :value="className">
+            <el-option v-for="className in classList" :key="className" :label="className" :value="className">
             </el-option>
           </el-select>
         </el-form-item>
@@ -48,7 +36,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="success">导出Excel</el-button>
+          <el-button type="success" @click="downloadExcel">导出Excel</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -94,6 +82,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { http } from '@/utils/http'
+import { ElMessage } from 'element-plus'
 
 // 定义数据接口
 interface SelectionRecord {
@@ -239,6 +228,100 @@ const fetchClassList = async () => {
     classList.value = res
   } catch (error) {
     console.error('获取班级列表失败:', error)
+  }
+}
+
+// 下载Excel文件
+const downloadExcel = async () => {
+  try {
+    loading.value = true
+
+    // 构造查询参数
+    const params = new URLSearchParams()
+    if (searchForm.name) params.append('studentName', searchForm.name)
+    if (searchForm.advisor) params.append('advisorName', searchForm.advisor)
+    if (searchForm.className) params.append('className', searchForm.className)
+    if (searchForm.topic) params.append('thesisId', searchForm.topic)
+
+    // 获取基础URL和token
+    const baseURL = import.meta.env.VITE_APP_API_BASE_URL || '/api'
+    const token = localStorage.getItem('authorization')
+    
+    // 调试信息
+    console.log('Token from localStorage:', token)
+    console.log('Authorization header will be:', token ? `Bearer ${token}` : 'empty')
+    
+    // 构造完整URL
+    const url = `${baseURL}/internship/thesis/allSelectionList/excel${params.toString() ? '?' + params.toString() : ''}`
+
+    // 使用fetch进行下载
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': token ? `Bearer ${token}` : '',
+        'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      }
+    })
+    
+    // 调试信息：检查实际发送的请求
+    console.log('Download request URL:', url)
+    console.log('Download request headers:', {
+      'Authorization': token ? `Bearer ${token.substring(0, 10)}...` : 'empty',
+      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    })
+
+    if (!response.ok) {
+      // 调试信息：检查响应详情
+      console.log('Response status:', response.status)
+      console.log('Response headers:', [...response.headers.entries()])
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    
+    // 调试信息：检查成功的响应
+    console.log('Download successful!')
+    console.log('Response headers:', [...response.headers.entries()])
+
+    // 获取文件名（从Content-Disposition头）
+    const contentDisposition = response.headers.get('Content-Disposition')
+    let filename = `实习选题列表_${new Date().getTime()}.xlsx`
+
+    if (contentDisposition) {
+      // 优先处理 RFC 5987 格式 (filename*)
+      const utf8FilenameMatch = contentDisposition.match(/filename\*=UTF-8''([^;]+)/)
+      if (utf8FilenameMatch && utf8FilenameMatch[1]) {
+        try {
+          filename = decodeURIComponent(utf8FilenameMatch[1])
+        } catch (decodeError) {
+          console.warn('UTF-8文件名解码失败:', decodeError)
+        }
+      } else {
+        // 处理标准的filename参数
+        const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
+        if (filenameMatch && filenameMatch[1]) {
+          filename = filenameMatch[1].replace(/['"]/g, '')
+        }
+      }
+    }
+
+    // 获取blob数据
+    const blob = await response.blob()
+
+    // 创建下载链接
+    const downloadUrl = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = downloadUrl
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(downloadUrl)
+
+    ElMessage.success('Excel文件下载成功')
+  } catch (error) {
+    console.error('下载Excel失败:', error)
+    ElMessage.error('下载Excel文件失败: ' + (error as Error).message)
+  } finally {
+    loading.value = false
   }
 }
 
