@@ -81,50 +81,30 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { http } from '@/utils/http'
 import { ElMessage } from 'element-plus'
+import { internshipApi, type SelectionRecord, type ThesisItem, type PaginationData } from '@/api/internship'
+import { downloadExcel as downloadExcelUtil } from '@/utils/download'
 
-// 定义数据接口
-interface SelectionRecord {
-  selectionId: number
-  thesisId: number
-  thesisTitle: string
-  advisorName: string
-  achievementType: string
-  selectionType: string
-  studentName: string
-  studentNumber: string
-  groupMembers: string
-  className: string  // 新增班级名称字段
-}
-
-interface ThesisItem {
-  id: number
-  title: string
-  maxSelections: number
-  currentSelections: number
-  achievementTypes: string[]
-}
-
-interface PaginationData {
-  records: SelectionRecord[]
-  total: number
-  pageNum: number
-  pageSize: number
-  totalPages: number
+// 定义数据接口（只保留组件特有的接口）
+interface SearchParams {
+  topic: string | number;
+  name: string;
+  studentId: string;
+  advisor: string;
+  className: string;
 }
 
 // 加载状态
 const loading = ref(false)
 
-// 搜索表单数据 - 新增指导老师和班级字段
-const searchForm = reactive({
+// 搜索表单数据
+const searchForm = reactive<SearchParams>({
   topic: '',
   name: '',
   studentId: '',
-  advisor: '',  // 指导老师筛选
-  className: '' // 班级筛选
-})
+  advisor: '',
+  className: ''
+});
 
 // 表格数据
 const tableData = ref<SelectionRecord[]>([])
@@ -145,19 +125,50 @@ const pagination = reactive({
   total: 0
 })
 
+// 获取指导教师名单
+const getAdvisorNames = async () => {
+  try {
+    const res = await internshipApi.getAdvisorNames()
+    advisorList.value = res
+  } catch (error) {
+    ElMessage.error('获取指导教师名单失败: ' + (error as Error).message)
+  }
+}
+
+// 获取班级名称
+const getClassNames = async () => {
+  try {
+    const res = await internshipApi.getClassNames()
+    classList.value = res
+  } catch (error) {
+    ElMessage.error('获取班级名称失败: ' + (error as Error).message)
+  }
+}
+
+// 获取论文列表
+const getThesisList = async () => {
+  try {
+    const res = await internshipApi.getThesisList()
+    thesisList.value = res
+  } catch (error) {
+    ElMessage.error('获取论文列表失败: ' + (error as Error).message)
+  }
+}
+
 // 获取列表数据
 const fetchData = async () => {
   loading.value = true
   try {
-    const res = await http.get('internship/thesis/selectionList', {
-      params: {
-        studentName: searchForm.name || undefined,
-        advisorName: searchForm.advisor || undefined,
-        className: searchForm.className || undefined,
-        thesisId: searchForm.topic || undefined  // 使用论文ID作为筛选条件
-      }
+    // 处理topic参数类型转换
+    const thesisId = searchForm.topic ? String(searchForm.topic) : undefined
+    
+    const res = await internshipApi.getSelectionList({
+      studentName: searchForm.name || undefined,
+      advisorName: searchForm.advisor || undefined,
+      className: searchForm.className || undefined,
+      thesisId: thesisId
     })
-
+    
     const data: PaginationData = res
     tableData.value = data.records
     pagination.total = data.total
@@ -166,6 +177,7 @@ const fetchData = async () => {
 
   } catch (error) {
     console.error('获取数据失败:', error)
+    ElMessage.error('获取数据失败: ' + (error as Error).message)
   } finally {
     loading.value = false
   }
@@ -182,8 +194,8 @@ const handleReset = () => {
   searchForm.topic = ''
   searchForm.name = ''
   searchForm.studentId = ''
-  searchForm.advisor = ''   // 重置指导老师筛选
-  searchForm.className = ''  // 重置班级筛选
+  searchForm.advisor = ''
+  searchForm.className = ''
   pagination.pageNum = 1
   fetchData()
 }
@@ -201,135 +213,32 @@ const handleCurrentChange = (val: number) => {
   fetchData()
 }
 
-// 获取论文列表数据
-const fetchThesisList = async () => {
-  try {
-    const res = await http.get('internship/thesis/list')
-    thesisList.value = res
-  } catch (error) {
-    console.error('获取论文列表失败:', error)
-  }
-}
-
-// 获取指导老师列表数据
-const fetchAdvisorList = async () => {
-  try {
-    const res = await http.get('internship/thesis/advisorNames')
-    advisorList.value = res
-  } catch (error) {
-    console.error('获取指导老师列表失败:', error)
-  }
-}
-
-// 获取班级列表数据
-const fetchClassList = async () => {
-  try {
-    const res = await http.get('internship/thesis/classNames')
-    classList.value = res
-  } catch (error) {
-    console.error('获取班级列表失败:', error)
-  }
-}
-
 // 下载Excel文件
 const downloadExcel = async () => {
   try {
-    loading.value = true
+    loading.value = true;
 
-    // 构造查询参数
-    const params = new URLSearchParams()
-    if (searchForm.name) params.append('studentName', searchForm.name)
-    if (searchForm.advisor) params.append('advisorName', searchForm.advisor)
-    if (searchForm.className) params.append('className', searchForm.className)
-    if (searchForm.topic) params.append('thesisId', searchForm.topic)
+    // 使用公共下载工具
+    await downloadExcelUtil(
+      '/admin/internship/thesis/allSelectionList/excel',
+      {},
+      '实习选题列表'
+    );
 
-    // 获取基础URL和token
-    const baseURL = import.meta.env.VITE_APP_API_BASE_URL || '/api'
-    const token = localStorage.getItem('authorization')
-    
-    // 调试信息
-    console.log('Token from localStorage:', token)
-    console.log('Authorization header will be:', token ? `Bearer ${token}` : 'empty')
-    
-    // 构造完整URL
-    const url = `${baseURL}/internship/thesis/allSelectionList/excel${params.toString() ? '?' + params.toString() : ''}`
+    ElMessage.success('Excel文件下载成功');
 
-    // 使用fetch进行下载
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Authorization': token ? `Bearer ${token}` : '',
-        'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      }
-    })
-    
-    // 调试信息：检查实际发送的请求
-    console.log('Download request URL:', url)
-    console.log('Download request headers:', {
-      'Authorization': token ? `Bearer ${token.substring(0, 10)}...` : 'empty',
-      'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    })
-
-    if (!response.ok) {
-      // 调试信息：检查响应详情
-      console.log('Response status:', response.status)
-      console.log('Response headers:', [...response.headers.entries()])
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    
-    // 调试信息：检查成功的响应
-    console.log('Download successful!')
-    console.log('Response headers:', [...response.headers.entries()])
-
-    // 获取文件名（从Content-Disposition头）
-    const contentDisposition = response.headers.get('Content-Disposition')
-    let filename = `实习选题列表_${new Date().getTime()}.xlsx`
-
-    if (contentDisposition) {
-      // 优先处理 RFC 5987 格式 (filename*)
-      const utf8FilenameMatch = contentDisposition.match(/filename\*=UTF-8''([^;]+)/)
-      if (utf8FilenameMatch && utf8FilenameMatch[1]) {
-        try {
-          filename = decodeURIComponent(utf8FilenameMatch[1])
-        } catch (decodeError) {
-          console.warn('UTF-8文件名解码失败:', decodeError)
-        }
-      } else {
-        // 处理标准的filename参数
-        const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/)
-        if (filenameMatch && filenameMatch[1]) {
-          filename = filenameMatch[1].replace(/['"]/g, '')
-        }
-      }
-    }
-
-    // 获取blob数据
-    const blob = await response.blob()
-
-    // 创建下载链接
-    const downloadUrl = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = downloadUrl
-    link.download = filename
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(downloadUrl)
-
-    ElMessage.success('Excel文件下载成功')
   } catch (error) {
-    console.error('下载Excel失败:', error)
-    ElMessage.error('下载Excel文件失败: ' + (error as Error).message)
+    ElMessage.error('导出失败: ' + (error as Error).message);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
 // 初始化加载数据
 onMounted(() => {
-  fetchThesisList() // 初始化时获取论文列表
-  fetchAdvisorList() // 初始化时获取指导老师列表
-  fetchClassList()   // 初始化时获取班级列表
+  getThesisList()
+  getAdvisorNames()
+  getClassNames()
   fetchData()
 })
 </script>
