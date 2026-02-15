@@ -45,7 +45,7 @@ export const internshipApi = {
    * @returns Promise<string[]>
    */
   getAdvisorNames: (): Promise<string[]> => {
-    return http.get('internship/thesis/advisorNames');
+    return http.get('internship/advisor/list');
   },
 
   /**
@@ -53,7 +53,7 @@ export const internshipApi = {
    * @returns Promise<string[]>
    */
   getClassNames: (): Promise<string[]> => {
-    return http.get('internship/thesis/classNames');
+    return http.get('internship/class/list');
   },
 
   /**
@@ -70,6 +70,6 @@ export const internshipApi = {
    * @returns Promise<PaginationData>
    */
   getSelectionList: (params: SelectionQuery = {}): Promise<PaginationData> => {
-    return http.get('internship/thesis/selectionList', { params });
+    return http.get('internship/selection/list', { params });
   }
 };
