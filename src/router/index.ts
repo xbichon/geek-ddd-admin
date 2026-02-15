@@ -10,7 +10,7 @@ const router = createRouter({
         {
           path: '',
           name: 'home',
-          component: () => import('@/views/Home/index.vue'),
+          component: () => import('@/views/home/index.vue'),
           meta: { title: '首页' }
         },
         {
@@ -20,13 +20,13 @@ const router = createRouter({
             {
               path: 'department',
               name: 'manager-department',
-              component: () => import('@/views/Manager/Department/index.vue'),
+              component: () => import('@/views/manager/department/index.vue'),
               meta: { title: '部门管理' }
             },
             {
               path: 'user',
               name: 'manager-user',
-              component: () => import('@/views/Manager/User/index.vue'),
+              component: () => import('@/views/manager/user/index.vue'),
               meta: { title: '用户管理' }
             },
           ]
@@ -48,7 +48,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/views/Login.vue'),
+      component: () => import('@/views/login/Index.vue'),
     }
   ],
 })

@@ -32,7 +32,7 @@
 import { reactive, useTemplateRef, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import { authApi,  CaptchaResponse } from '@/api/auth';
+import { authApi } from '@/api/auth';
 
 const loginFormRef = useTemplateRef("loginFormRef");
 const router = useRouter();
@@ -58,7 +58,7 @@ const loginInfo = reactive({
   captcha: ''
 });
 
-const captchaData = reactive<CaptchaResponse>({
+const captchaData = reactive({
   key: '',
   data: ''
 });
