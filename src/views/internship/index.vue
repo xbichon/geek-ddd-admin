@@ -149,7 +149,7 @@ const pagination = reactive({
 const fetchData = async () => {
   loading.value = true
   try {
-    const res = await http.get('admin/internship/thesis/selectionList', {
+    const res = await http.get('internship/thesis/selectionList', {
       params: {
         studentName: searchForm.name || undefined,
         advisorName: searchForm.advisor || undefined,
@@ -252,7 +252,7 @@ const downloadExcel = async () => {
     console.log('Authorization header will be:', token ? `Bearer ${token}` : 'empty')
     
     // 构造完整URL
-    const url = `${baseURL}/admin/internship/thesis/allSelectionList/excel${params.toString() ? '?' + params.toString() : ''}`
+    const url = `${baseURL}/internship/thesis/allSelectionList/excel${params.toString() ? '?' + params.toString() : ''}`
 
     // 使用fetch进行下载
     const response = await fetch(url, {
