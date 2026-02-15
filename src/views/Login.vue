@@ -29,10 +29,10 @@
 </template>
 
 <script setup>
-import { reactive, useTemplateRef, onMounted, ref } from 'vue';
-import { http } from '@/utils/http';
+import { reactive, useTemplateRef, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import { authApi,  CaptchaResponse } from '@/api/auth';
 
 const loginFormRef = useTemplateRef("loginFormRef");
 const router = useRouter();
@@ -58,11 +58,10 @@ const loginInfo = reactive({
   captcha: ''
 });
 
-const captchaData = reactive({
+const captchaData = reactive<CaptchaResponse>({
   key: '',
   data: ''
 });
-
 
 // 页面加载时获取验证码
 onMounted(() => {
@@ -72,9 +71,8 @@ onMounted(() => {
 // 刷新验证码
 const refreshCaptcha = async () => {
   try {
-    const response = await http.get('/security/auth/captcha');
-    captchaData.key = response.key;
-    captchaData.data = response.data;
+    const response = await authApi.getCaptcha();
+    Object.assign(captchaData, response);
   } catch (error) {
     ElMessage.error('获取验证码失败: ' + error.message);
   }
@@ -84,8 +82,7 @@ const submitForm = async () => {
   if (!loginFormRef.value || !(await loginFormRef.value.validate())) return;
 
   try {
-    const response = await http.post('/security/auth/login', {
-      userType: 'TEACHER',
+    const response = await authApi.login({
       identifier: loginInfo.username,
       password: loginInfo.password,
       captchaKey: captchaData.key,

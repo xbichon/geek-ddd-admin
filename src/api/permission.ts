@@ -1,4 +1,4 @@
-import { http } from '@/utils/http';
+import { authHttp } from '@/utils/http';
 
 // 权限API服务
 export const permissionApi = {
@@ -7,6 +7,6 @@ export const permissionApi = {
    * @returns Promise<string[]>
    */
   getPermissions: (): Promise<string[]> => {
-    return http.get('/security/permission');
+    return authHttp.get('/permission');
   }
 };

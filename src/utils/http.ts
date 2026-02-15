@@ -109,4 +109,5 @@ export interface ApiResponse<T = any> {
 
 // 默认导出实例
 const BASE_URL: string = import.meta.env.VITE_APP_API_BASE_URL || '/';
-export const http: HttpService = new HttpService(BASE_URL);
+export const http: HttpService = new HttpService(BASE_URL+'api');
+export const authHttp: HttpService = new HttpService(BASE_URL+'security');
