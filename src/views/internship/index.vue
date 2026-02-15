@@ -220,7 +220,7 @@ const downloadExcel = async () => {
 
     // 使用公共下载工具
     await downloadExcelUtil(
-      '/admin/internship/thesis/allSelectionList/excel',
+      '/internship/selection/excel',
       {},
       '实习选题列表'
     );
