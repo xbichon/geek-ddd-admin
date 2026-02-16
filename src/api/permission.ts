@@ -7,6 +7,6 @@ export const permissionApi = {
    * @returns Promise<string[]>
    */
   getPermissions: (): Promise<string[]> => {
-    return authHttp.get('/permission');
+    return authHttp.get('/permission/getCurrent');
   }
 };

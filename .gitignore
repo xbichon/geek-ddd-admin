@@ -7,26 +7,36 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
-.DS_Store
+
+# Build artifacts
 dist
 dist-ssr
-coverage
+*.tgz
+*.zip
+
+# Environment Files
+.env.local
+.env.*.local
 *.local
 
+# Test artifacts
 /cypress/videos/
 /cypress/screenshots/
+coverage/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
+.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
+# Other
 *.tsbuildinfo
-
 .claude/settings.local.json
