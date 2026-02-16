@@ -128,7 +128,7 @@ const pagination = reactive({
 // 获取指导教师名单
 const getAdvisorNames = async () => {
   try {
-    const res = await internshipApi.getAdvisorNames()
+    const res = await internshipApi.advisor.getList()
     advisorList.value = res
   } catch (error) {
     ElMessage.error('获取指导教师名单失败: ' + (error as Error).message)
@@ -138,7 +138,7 @@ const getAdvisorNames = async () => {
 // 获取班级名称
 const getClassNames = async () => {
   try {
-    const res = await internshipApi.getClassNames()
+    const res = await internshipApi.class.getList()
     classList.value = res
   } catch (error) {
     ElMessage.error('获取班级名称失败: ' + (error as Error).message)
@@ -148,7 +148,7 @@ const getClassNames = async () => {
 // 获取论文列表
 const getThesisList = async () => {
   try {
-    const res = await internshipApi.getThesisList()
+    const res = await internshipApi.thesis.getList()
     thesisList.value = res
   } catch (error) {
     ElMessage.error('获取论文列表失败: ' + (error as Error).message)
@@ -162,7 +162,7 @@ const fetchData = async () => {
     // 处理topic参数类型转换
     const thesisId = searchForm.topic ? String(searchForm.topic) : undefined
     
-    const res = await internshipApi.getSelectionList({
+    const res = await internshipApi.selection.getList({
       studentName: searchForm.name || undefined,
       advisorName: searchForm.advisor || undefined,
       className: searchForm.className || undefined,
