@@ -1,6 +1,6 @@
-import { getMenuData } from './config';
+import { getMenuData } from './data';
 import { permissionApi } from '@/api/permission';
-import type { MenuItem } from './types';
+import type { MenuItem } from './data';
 
 /**
  * 获取用户授权菜单
@@ -54,9 +54,6 @@ function filterMenuByPermissions(menuItems: MenuItem[], permissions: string[]): 
         .filter((item): item is MenuItem => item !== null);
 }
 
-export const menuService = {
-    getAuthorizedMenu
-};
-
-// 从 config 重新导出，方便外部统一导入
-export { getMenuData, type MenuItem } from './config';
+// 扁平化导出
+export { getMenuData, type MenuItem } from './data';
+export { getAuthorizedMenu };

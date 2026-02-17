@@ -27,8 +27,7 @@ src/
 ├── router/                 # 路由配置
 ├── services/               # 业务服务层（复杂逻辑抽离）
 │   └── menu/               # 示例：菜单服务
-│       ├── types.ts        # 领域类型定义（就近原则）
-│       ├── config.ts       # 配置数据
+│       ├── data.ts         # 类型定义 + 配置数据
 │       └── index.ts        # 服务入口
 ├── styles/                 # 全局样式
 │   ├── main.css            # 全局样式入口
