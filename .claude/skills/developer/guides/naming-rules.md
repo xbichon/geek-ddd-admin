@@ -29,3 +29,14 @@
 /internship/thesis/create
 /system/user/update
 ```
+
+## 目录命名
+
+- 全部小写
+- 多个单词用连字符分隔
+- 简短清晰
+
+```
+src/api/internship/
+src/views/user-manager/
+```

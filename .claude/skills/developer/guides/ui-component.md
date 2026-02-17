@@ -1,4 +1,4 @@
-# 组件开发规范
+# 组件开发详细规范
 
 ## Vue 单文件组件结构
 
@@ -49,3 +49,21 @@ onMounted(() => {
 
 - 大驼峰命名（如 `UserManager.vue`）
 - 与路由名称对应
+
+## 导入顺序
+
+1. 类型导入（`import type`）
+2. Vue 组合式函数
+3. API 导入
+4. 组件特有类型定义
+5. 响应式数据
+6. 方法定义
+7. 生命周期钩子
+
+## Element Plus 使用
+
+- 使用 `el-card` 包裹内容区域
+- 使用 `el-table` 展示列表数据
+- 使用 `el-form` + `el-form-item` 构建表单
+- 使用 `el-pagination` 分页组件
+- 使用 `v-loading` 指令显示加载状态
