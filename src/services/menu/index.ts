@@ -1,6 +1,6 @@
 import { getMenuData } from './config';
 import { permissionApi } from '@/api/permission';
-import type { MenuItem } from '@/types/menu';
+import type { MenuItem } from './types';
 
 /**
  * 获取用户授权菜单

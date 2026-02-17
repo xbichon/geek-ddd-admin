@@ -11,21 +11,34 @@
 
 ```
 src/
-├── api/                    # API 接口层（按模块组织）
-│   ├── internship/         # 实习模块示例
-│   │   ├── index.ts        # 统一导出：internshipApi
-│   │   ├── advisor.ts      # 指导老师接口
+├── api/                    # API 接口层
+│   ├── internship/         # 按业务模块组织
+│   │   ├── index.ts        # 模块统一导出
+│   │   └── xxx.ts          # 具体业务接口文件
+│   └── xxx.ts              # 简单业务直接放根目录
+├── assets/                 # 静态资源（图片、字体等）
 ├── components/             # 公共组件
-│   └── common/             # 通用组件
+│   └── common/             # 通用组件（多个页面复用）
+├── data/                   # 静态数据/枚举配置
+├── layouts/                # 布局组件
+│   └── Main/               # 主布局示例
+│       ├── Index.vue
+│       └── components/     # 布局私有子组件
 ├── router/                 # 路由配置
-│   └── index.ts
+├── services/               # 业务服务层（复杂逻辑抽离）
+│   └── menu/               # 示例：菜单服务
+│       ├── types.ts        # 领域类型定义（就近原则）
+│       ├── config.ts       # 配置数据
+│       └── index.ts        # 服务入口
+├── styles/                 # 全局样式
+│   ├── main.css            # 全局样式入口
+│   └── variables.scss      # SCSS 变量
+├── types/                  # 全局类型定义
 ├── utils/                  # 工具函数
-│   ├── http.ts             # HTTP 封装（已封装 http/authHttp）
+│   └── http.ts             # HTTP 封装
 └── views/                  # 页面视图
-    ├── internship/         # 实习管理页面
-    ├── login/              # 登录页
-    ├── manager/            # 管理后台
-    └── home/               # 首页
+    └── xxx/                # 按业务模块组织
+        └── index.vue
 ```
 
 ## 关键设计模式

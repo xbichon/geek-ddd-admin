@@ -1,4 +1,4 @@
-import type { MenuItem } from '@/types/menu';
+import type { MenuItem } from './types';
 
 /**
  * 菜单配置数据
