@@ -19,7 +19,6 @@ src/
 ├── assets/                 # 静态资源（图片、字体等）
 ├── components/             # 公共组件
 │   └── common/             # 通用组件（多个页面复用）
-├── data/                   # 静态数据/枚举配置
 ├── layouts/                # 布局组件
 │   └── Main/               # 主布局示例
 │       ├── Index.vue
@@ -32,7 +31,6 @@ src/
 ├── styles/                 # 全局样式
 │   ├── main.css            # 全局样式入口
 │   └── variables.scss      # SCSS 变量
-├── types/                  # 全局类型定义
 ├── utils/                  # 工具函数
 │   └── http.ts             # HTTP 封装
 └── views/                  # 页面视图
