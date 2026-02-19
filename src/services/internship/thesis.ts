@@ -12,9 +12,9 @@ export interface ThesisItem {
 }
 
 /**
- * 论文 API
+ * 论文 Service
  */
-export const thesisApi = {
+export const thesisService = {
   /**
    * 获取论文列表
    * @returns Promise<ThesisItem[]>

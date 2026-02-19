@@ -1,7 +1,7 @@
 import { authHttp } from '@/utils/http';
 
-// 权限API服务
-export const permissionApi = {
+// 权限 Service
+export const permissionService = {
   /**
    * 获取用户权限列表
    * @returns Promise<string[]>

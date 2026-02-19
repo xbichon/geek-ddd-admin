@@ -82,7 +82,15 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import { internshipApi, type SelectionRecord, type ThesisItem, type PaginationData } from '@/api/internship'
+import {
+  advisorService,
+  classService,
+  thesisService,
+  selectionService,
+  type SelectionRecord,
+  type ThesisItem,
+  type PaginationData
+} from '@/services/internship'
 import { downloadExcel as downloadExcelUtil } from '@/utils/download'
 
 // 定义数据接口（只保留组件特有的接口）
@@ -128,7 +136,7 @@ const pagination = reactive({
 // 获取指导教师名单
 const getAdvisorNames = async () => {
   try {
-    const res = await internshipApi.advisor.getList()
+    const res = await advisorService.getList()
     advisorList.value = res
   } catch (error) {
     ElMessage.error('获取指导教师名单失败: ' + (error as Error).message)
@@ -138,7 +146,7 @@ const getAdvisorNames = async () => {
 // 获取班级名称
 const getClassNames = async () => {
   try {
-    const res = await internshipApi.class.getList()
+    const res = await classService.getList()
     classList.value = res
   } catch (error) {
     ElMessage.error('获取班级名称失败: ' + (error as Error).message)
@@ -148,7 +156,7 @@ const getClassNames = async () => {
 // 获取论文列表
 const getThesisList = async () => {
   try {
-    const res = await internshipApi.thesis.getList()
+    const res = await thesisService.getList()
     thesisList.value = res
   } catch (error) {
     ElMessage.error('获取论文列表失败: ' + (error as Error).message)
@@ -162,7 +170,7 @@ const fetchData = async () => {
     // 处理topic参数类型转换
     const thesisId = searchForm.topic ? String(searchForm.topic) : undefined
     
-    const res = await internshipApi.selection.getList({
+    const res = await selectionService.getList({
       studentName: searchForm.name || undefined,
       advisorName: searchForm.advisor || undefined,
       className: searchForm.className || undefined,

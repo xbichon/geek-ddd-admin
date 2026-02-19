@@ -23,8 +23,8 @@ export interface LoginResponse {
   // 可以根据实际响应结构调整
 }
 
-// 认证API服务
-export const authApi = {
+// 认证 Service
+export const authService = {
   /**
    * 获取验证码
    * @returns Promise<CaptchaResponse>

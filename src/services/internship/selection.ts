@@ -37,9 +37,9 @@ export interface SelectionQuery {
 }
 
 /**
- * 选题 API
+ * 选题 Service
  */
-export const selectionApi = {
+export const selectionService = {
   /**
    * 获取选题列表（带搜索条件）
    * @param params 搜索参数

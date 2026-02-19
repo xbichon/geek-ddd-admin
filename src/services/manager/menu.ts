@@ -1,5 +1,5 @@
 import { getMenuData } from './data';
-import { permissionApi } from '@/api/permission';
+import { permissionService } from '@/services/security/permission';
 import type { MenuItem } from './data';
 
 /**
@@ -8,7 +8,7 @@ import type { MenuItem } from './data';
  */
 async function getAuthorizedMenu(): Promise<MenuItem[]> {
     // 获取用户权限列表
-    const permissions = await permissionApi.getPermissions();
+    const permissions = await permissionService.getPermissions();
     const menuData = getMenuData();
 
     // 递归过滤菜单
@@ -55,5 +55,7 @@ function filterMenuByPermissions(menuItems: MenuItem[], permissions: string[]): 
 }
 
 // 扁平化导出
-export { getMenuData, type MenuItem } from './data';
-export { getAuthorizedMenu };
+export { type MenuItem } from './data';
+export const menuService= { 
+    getAuthorizedMenu
+};

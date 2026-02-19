@@ -32,7 +32,7 @@
 import { reactive, useTemplateRef, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import { authApi } from '@/api/auth';
+import { authService } from '@/services/security/auth';
 
 const loginFormRef = useTemplateRef("loginFormRef");
 const router = useRouter();
@@ -71,7 +71,7 @@ onMounted(() => {
 // 刷新验证码
 const refreshCaptcha = async () => {
   try {
-    const response = await authApi.getCaptcha();
+    const response = await authService.getCaptcha();
     Object.assign(captchaData, response);
   } catch (error) {
     ElMessage.error('获取验证码失败: ' + error.message);
@@ -82,7 +82,7 @@ const submitForm = async () => {
   if (!loginFormRef.value || !(await loginFormRef.value.validate())) return;
 
   try {
-    const response = await authApi.login({
+    const response = await authService.login({
       identifier: loginInfo.username,
       password: loginInfo.password,
       captchaKey: captchaData.key,

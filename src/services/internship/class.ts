@@ -1,14 +1,14 @@
 import { http } from '@/utils/http';
 
 /**
- * 指导老师 API
+ * 班级 Service
  */
-export const advisorApi = {
+export const classService = {
   /**
-   * 获取指导教师名单
+   * 获取班级名称列表
    * @returns Promise<string[]>
    */
   getList: (): Promise<string[]> => {
-    return http.get('/internship/advisor/list');
+    return http.get('/internship/class/list');
   }
 };
