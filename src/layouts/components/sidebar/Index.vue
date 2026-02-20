@@ -63,13 +63,9 @@ const emit = defineEmits<{
 const menuData = ref<MenuItem[]>([])
 const loading = ref(false)
 
-function isRouteObject(route: any): route is { meta?: { title?: string } } {
-    return typeof route === 'object' && route !== null && !Array.isArray(route);
-}
-
-function handleMenuSelect(index: string, indexPath: string, menuItem: MenuItemClicked) {
-    const title = isRouteObject(menuItem.route) ? menuItem.route.meta?.title : '未命名'
-    emit('menuSelect', index, title || '未命名')
+function handleMenuSelect(index: string, _indexPath: string, menuItem: MenuItemClicked) {
+    const title = (menuItem.route as { meta?: { title?: string } })?.meta?.title || '未命名'
+    emit('menuSelect', index, title)
 }
 
 // 获取菜单数据

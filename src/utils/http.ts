@@ -35,10 +35,6 @@ export class HttpService {
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => {
         let result: any = response.data;
-
-        
-
-
         switch (result.code) {
           case 200:
 
