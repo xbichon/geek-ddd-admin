@@ -8,11 +8,11 @@ export interface CaptchaResponse {
 
 // 登录请求类型
 export interface LoginRequest {
-  userType: 'TEACHER';
   identifier: string;
   password: string;
   captchaKey: string;
   captcha: string;
+  userType?: 'TEACHER';
 }
 
 // 登录响应类型

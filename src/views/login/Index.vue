@@ -22,17 +22,17 @@
 
       <el-form-item>
 
-        <el-button type="primary" class="button" @click="submitForm">登录</el-button>
+        <el-button type="primary" class="button" @click="handleSubmit">登录</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
-<script setup>
-import { reactive, useTemplateRef, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { ElMessage } from 'element-plus';
-import { authService } from '@/services/security/auth';
+<script setup lang="ts">
+import { reactive, useTemplateRef, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { ElMessage } from 'element-plus'
+import { authService } from '@/services/security/auth'
 
 const loginFormRef = useTemplateRef("loginFormRef");
 const router = useRouter();
@@ -70,15 +70,11 @@ onMounted(() => {
 
 // 刷新验证码
 const refreshCaptcha = async () => {
-  try {
-    const response = await authService.getCaptcha();
-    Object.assign(captchaData, response);
-  } catch (error) {
-    ElMessage.error('获取验证码失败: ' + error.message);
-  }
-};
+  const response = await authService.getCaptcha()
+  Object.assign(captchaData, response)
+}
 
-const submitForm = async () => {
+const handleSubmit = async () => {
   if (!loginFormRef.value || !(await loginFormRef.value.validate())) return;
 
   try {
@@ -90,136 +86,20 @@ const submitForm = async () => {
     });
 
     console.log('登录成功', response);
-    localStorage.setItem('authorization', response);
+    localStorage.setItem('authorization', response.token);
     router.push('/');
 
-  } catch (error) {
+  } catch (error: any) {
     // 登录失败时刷新验证码
-    refreshCaptcha();
+    refreshCaptcha()
 
-    localStorage.removeItem('authorization');
-    ElMessage.error(error.message)
+    localStorage.removeItem('authorization')
+    ElMessage.error(error.message || '登录失败')
   }
 };
 
 </script>
 
 <style scoped>
-.login-container {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  height: 100vh;
-  background: url('@/assets/login.jpeg') no-repeat center center;
-  background-size: cover;
-  padding: 0;
-  overflow: hidden;
-  position: relative;
-}
-
-.login-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 1;
-}
-
-.login-form {
-  width: 100%;
-  max-width: 380px;
-  padding: 48px 40px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  margin-right: 15%;
-  position: relative;
-  z-index: 2;
-}
-
-.login-title {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  font-weight: 600;
-  color: #000000;
-  margin-bottom: 32px;
-  letter-spacing: 1px;
-  gap: 12px;
-}
-
-.login-title .logo {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
-}
-
-.el-form-item {
-  margin-bottom: 24px;
-}
-
-.el-form-item__label {
-  font-weight: 500;
-  color: #262626;
-  margin-bottom: 8px;
-}
-
-.el-input {
-  height: 40px;
-}
-
-.el-input__inner {
-  height: 100%;
-  border-radius: 6px;
-  border: 1px solid #d9d9d9;
-  transition: all 0.3s;
-}
-
-.el-input__inner:focus {
-  border-color: #1890ff;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-}
-
-.captcha-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.captcha-input {
-  flex: 1;
-}
-
-.captcha-image {
-  width: 120px;
-  height: 40px;
-  cursor: pointer;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-}
-
-.el-button {
-  width: 100%;
-  height: 40px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  background: #1890ff;
-  border-color: #1890ff;
-  transition: all 0.3s;
-}
-
-.el-button:hover {
-  background: #40a9ff;
-  border-color: #40a9ff;
-}
-
-.el-button:active {
-  background: #096dd9;
-  border-color: #096dd9;
-}
+@import './Index.scss';
 </style>
