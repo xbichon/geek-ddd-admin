@@ -1,0 +1,98 @@
+/* 左侧导航设置 */
+aside {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #001529;
+}
+
+aside .header {
+    height: 60px;
+    background-color: #001529;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-bottom: 1px solid #0c2135;
+    gap: 8px;
+    padding: 0 8px;
+}
+
+aside .header .logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+aside .header .title {
+    font-size: 20px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+aside .menu {
+    flex-grow: 1;
+    overflow: auto;
+    background-color: #001529;
+    border-right: none;
+}
+
+/* 菜单项样式 */
+:deep(.el-menu) {
+    background-color: #001529;
+    border-right: none;
+}
+
+:deep(.el-menu-item) {
+    color: #bfbfbf;
+    background-color: #001529;
+}
+
+:deep(.el-menu-item:hover) {
+    color: #fff;
+    background-color: #1890ff;
+}
+
+:deep(.el-menu-item.is-active) {
+    color: #fff;
+    background-color: #1890ff;
+}
+
+:deep(.el-sub-menu__title) {
+    color: #bfbfbf;
+    background-color: #001529;
+}
+
+:deep(.el-sub-menu__title:hover) {
+    color: #fff;
+    background-color: #1890ff;
+}
+
+:deep(.el-sub-menu .el-menu-item) {
+    background-color: #000c17;
+    color: #8c8c8c;
+}
+
+:deep(.el-sub-menu .el-menu-item:hover) {
+    color: #fff;
+    background-color: #1890ff;
+}
+
+:deep(.el-sub-menu .el-menu-item.is-active) {
+    color: #fff;
+    background-color: #1890ff;
+}
+
+:deep(.el-icon) {
+    color: inherit;
+}
+
+/* 折叠状态下的样式 */
+:deep(.el-menu--collapse .el-menu-item),
+:deep(.el-menu--collapse .el-sub-menu__title) {
+    justify-content: center;
+}
+
+:deep(.el-menu--collapse .el-sub-menu__title .el-icon) {
+    margin-right: 0;
+}

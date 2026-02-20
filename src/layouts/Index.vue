@@ -1,10 +1,10 @@
 <template>
     <el-container class="layout">
-        <Sidebar :is-collapse="isCollapse" :active-tab="activeTab" @menu-select="handleMenuSelect" />
+        <Sidebar :is-collapse="isCollapse" :active-tab="activeTab" @menuSelect="handleMenuSelect" />
         <el-container direction="vertical">
-            <Header :user-name="userName" :user-avatar="userAvatar" @user-command="handleUserCommand" @toggle-menu="toggleMenu" />
+            <Header :user-name="userName" :user-avatar="userAvatar" @userCommand="handleUserCommand" @toggleMenu="toggleMenu" />
             <el-main>
-                <el-tabs type="card" v-model="activeTab" class="demo-tabs" @tab-remove="handleTabRemove">
+                <el-tabs type="card" v-model="activeTab" class="demo-tabs" @tabRemove="handleTabRemove">
                     <el-tab-pane v-for="item in tabs" :key="item.name" :label="item.title" :name="item.name"
                         :closable="item.name !== 'home'" />
                 </el-tabs>
@@ -27,8 +27,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 
 // 导入组件
-import Sidebar from './components/Sidebar.vue'
-import Header from './components/Header.vue'
+import Sidebar from './components/sidebar/Index.vue'
+import Header from './components/header/Index.vue'
 
 interface TabItem {
     title: string

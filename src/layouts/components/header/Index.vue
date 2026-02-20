@@ -56,5 +56,5 @@ const emit = defineEmits<{
 </script>
 
 <style scoped>
-@import './Header.scss';
+@import './Index.scss';
 </style>
