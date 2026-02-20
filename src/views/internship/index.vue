@@ -43,7 +43,7 @@
 
     <!-- 表格区域 -->
     <el-card shadow="never" class="table-card">
-      <el-table :data="tableData" border style="width: 100%" v-loading="loading">
+      <el-table :data="tableData" style="width: 100%" v-loading="loading">
         <!-- <el-table-column type="selection" width="55"></el-table-column> -->
         <el-table-column prop="selectionId" label="ID" width="40"></el-table-column>
         <el-table-column prop="studentNumber" label="学号" width="140"></el-table-column>
@@ -81,7 +81,6 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
 import {
   advisorService,
   classService,
@@ -135,32 +134,20 @@ const pagination = reactive({
 
 // 获取指导教师名单
 const getAdvisorNames = async () => {
-  try {
-    const res = await advisorService.getList()
-    advisorList.value = res
-  } catch (error) {
-    ElMessage.error('获取指导教师名单失败: ' + (error as Error).message)
-  }
+  const res = await advisorService.getList()
+  advisorList.value = res
 }
 
 // 获取班级名称
 const getClassNames = async () => {
-  try {
-    const res = await classService.getList()
-    classList.value = res
-  } catch (error) {
-    ElMessage.error('获取班级名称失败: ' + (error as Error).message)
-  }
+  const res = await classService.getList()
+  classList.value = res
 }
 
 // 获取论文列表
 const getThesisList = async () => {
-  try {
-    const res = await thesisService.getList()
-    thesisList.value = res
-  } catch (error) {
-    ElMessage.error('获取论文列表失败: ' + (error as Error).message)
-  }
+  const res = await thesisService.getList()
+  thesisList.value = res
 }
 
 // 获取列表数据
@@ -169,23 +156,19 @@ const fetchData = async () => {
   try {
     // 处理topic参数类型转换
     const thesisId = searchForm.topic ? String(searchForm.topic) : undefined
-    
+
     const res = await selectionService.getList({
       studentName: searchForm.name || undefined,
       advisorName: searchForm.advisor || undefined,
       className: searchForm.className || undefined,
       thesisId: thesisId
     })
-    
+
     const data: PaginationData = res
     tableData.value = data.records
     pagination.total = data.total
     pagination.pageNum = data.pageNum
     pagination.pageSize = data.pageSize
-
-  } catch (error) {
-    console.error('获取数据失败:', error)
-    ElMessage.error('获取数据失败: ' + (error as Error).message)
   } finally {
     loading.value = false
   }
@@ -223,22 +206,16 @@ const handleCurrentChange = (val: number) => {
 
 // 下载Excel文件
 const downloadExcel = async () => {
+  loading.value = true
   try {
-    loading.value = true;
-
     // 使用公共下载工具
     await downloadExcelUtil(
       '/internship/selection/excel',
       {},
       '实习选题列表'
-    );
-
-    ElMessage.success('Excel文件下载成功');
-
-  } catch (error) {
-    ElMessage.error('导出失败: ' + (error as Error).message);
+    )
   } finally {
-    loading.value = false;
+    loading.value = false
   }
 }
 
@@ -252,21 +229,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.internship-management {
-  padding: 20px;
-}
-
-.filter-card {
-  margin-bottom: 20px;
-}
-
-.table-card {
-  margin-top: 20px;
-}
-
-.pagination-container {
-  margin-top: 20px;
-  display: flex;
-  justify-content: flex-end;
-}
+@import './Index.scss';
 </style>
