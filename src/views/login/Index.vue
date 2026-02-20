@@ -31,10 +31,10 @@
 <script setup lang="ts">
 import { reactive, useTemplateRef, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { ElMessage } from 'element-plus'
+import { ElMessage, type FormInstance } from 'element-plus'
 import { authService } from '@/services/security/auth'
 
-const loginFormRef = useTemplateRef("loginFormRef");
+const loginFormRef = useTemplateRef<FormInstance>("loginFormRef");
 const router = useRouter();
 
 const rules = reactive({

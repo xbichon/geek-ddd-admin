@@ -7,4 +7,4 @@ export { authService } from './auth';
 export { permissionService } from './permission';
 
 // 类型导出
-export type { CaptchaResponse, LoginRequest, LoginResponse } from './auth';
+export type { CaptchaResponse, LoginRequest } from './auth';
