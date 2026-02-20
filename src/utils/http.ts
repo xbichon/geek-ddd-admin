@@ -34,14 +34,13 @@ export class HttpService {
     // 响应拦截器
     this.instance.interceptors.response.use(
       (response: AxiosResponse) => {
-        let result: any = response.data;
+        const result: any = response.data;
+
         switch (result.code) {
           case 200:
-
             return result.data;
 
           case 401:
-
             ElMessageBox.confirm('您尚未登录，请登录后再试', '提示', {
               confirmButtonText: '去登录',
               cancelButtonText: '取消',
@@ -49,8 +48,7 @@ export class HttpService {
             }).then(() => {
               router.push('/login');
             });
-
-            break;
+            return Promise.reject(new Error(result.message || '未登录'));
 
           case 403:
             ElMessageBox.confirm('您没有权限访问该页面', '提示', {
@@ -60,16 +58,18 @@ export class HttpService {
             }).then(() => {
               router.push('/');
             });
-            break;
+            return Promise.reject(new Error(result.message || '无权限'));
+
           default:
-            return Promise.reject({
-              ...result,
-            });
+            // 其他业务错误，统一弹窗提示
+            ElMessage.error(result.message || '请求失败');
+            return Promise.reject(new Error(result.message || '请求失败'));
         }
       },
       (error: any) => {
-        // 统一错误处理
-        ElMessage.error("HTTP发生错误:" + error.response?.data?.message || '发生未知错误');
+        // 网络/服务器错误
+        const message = error.response?.data?.message || error.message || '网络请求失败';
+        ElMessage.error(message);
         return Promise.reject(error);
       }
     );

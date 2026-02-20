@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { menuService, type MenuItem } from '@/services/manager'
-import { ElMessage, type MenuItemClicked } from 'element-plus'
+import { type MenuItemClicked } from 'element-plus'
 
 interface Props {
     isCollapse?: boolean
@@ -73,8 +73,6 @@ async function fetchMenuData() {
     loading.value = true
     try {
         menuData.value = await menuService.getAuthorizedMenu()
-    } catch (error: any) {
-        ElMessage.error(error.message || '网络请求失败，请检查网络连接')
     } finally {
         loading.value = false
     }
