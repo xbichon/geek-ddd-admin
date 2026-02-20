@@ -1,10 +1,10 @@
 <template>
     <el-container class="layout">
-        <Sidebar :is-collapse="isCollapse" :active-tab="activeTab" @menu-select="menu_click" />
+        <Sidebar :is-collapse="isCollapse" :active-tab="activeTab" @menu-select="handleMenuSelect" />
         <el-container direction="vertical">
             <Header :user-name="userName" :user-avatar="userAvatar" @user-command="handleUserCommand" @toggle-menu="toggleMenu" />
             <el-main>
-                <el-tabs type="card" v-model="activeTab" class="demo-tabs" @tab-remove="tab_close">
+                <el-tabs type="card" v-model="activeTab" class="demo-tabs" @tab-remove="handleTabRemove">
                     <el-tab-pane v-for="item in tabs" :key="item.name" :label="item.title" :name="item.name"
                         :closable="item.name !== 'home'" />
                 </el-tabs>
@@ -37,8 +37,8 @@ interface TabItem {
 
 const route = useRoute()
 const router = useRouter()
-const isCollapse = ref(false)
 
+const isCollapse = ref(false)
 const activeTab = ref('home')
 const tabs = ref<TabItem[]>([])
 
@@ -46,14 +46,13 @@ const tabs = ref<TabItem[]>([])
 const userName = ref('管理员')
 const userAvatar = ref('https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
 
-function menu_click(index: string, title: string) {
-
-    tab_create(title, index);
+// 菜单点击处理
+function handleMenuSelect(index: string, title: string) {
+    createTab(title, index);
 }
 
-
 // Tab关闭处理
-function tab_close(targetName: string) {
+function handleTabRemove(targetName: string) {
     const index = tabs.value.findIndex(tab => tab.name === targetName)
 
     // 当目标Tab是home时 或者 目标Tab不存在时，不允许关闭
@@ -74,7 +73,7 @@ function tab_close(targetName: string) {
 }
 
 // 创建Tab
-function tab_create(title: string, name: string) {
+function createTab(title: string, name: string) {
     // 检查标签是否已存在
     const existingTab = tabs.value.find(tab => tab.name === name);
 
@@ -122,11 +121,11 @@ function toggleMenu() {
 // 组件挂载时初始化首页标签
 onMounted(() => {
     // 初始化首页标签
-    tab_create('首页', 'home')
+    createTab('首页', 'home')
 
     // 检查当前路由，如果不在首页则自动打开对应标签
     if (route.name && route.name !== 'home') {
-        tab_create(route.meta?.title as string || '未命名标签', route.name.toString());
+        createTab(route.meta?.title as string || '未命名标签', route.name.toString());
         activeTab.value = route.name.toString();
     }
 })
