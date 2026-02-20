@@ -132,5 +132,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import './layout.scss';
+@import './Index.scss';
 </style>

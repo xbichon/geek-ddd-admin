@@ -6,6 +6,22 @@
 |------|---------|------|
 | 页面文件 | 目录小写，`Index.vue` 大写 | `views/user/Index.vue` |
 
+**必须要求**：创建页面时，必须创建父级目录，目录内放置 `Index.vue`，禁止直接创建 `user.vue` 等命名方式。
+
+```
+正确：
+views/user/
+└── Index.vue
+
+正确：
+views/manager/user/
+└── Index.vue
+
+禁止：
+views/User.vue
+views/user.vue
+```
+
 ## 2、函数命名（camelCase）
 
 | 场景 | 前缀 | 示例 |
