@@ -5,10 +5,12 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
+
   // 加载环境变量
   const env = loadEnv(mode, process.cwd(), '')
-  
+
   return {
+    base: '/admin',
     plugins: [
       vue(),
       vueDevTools(),
