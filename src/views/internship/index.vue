@@ -206,8 +206,8 @@ const handleCurrentChange = (val: number) => {
 
 // 下载Excel文件
 const downloadExcel = async () => {
-  loading.value = true
   try {
+    loading.value = true
     // 使用公共下载工具
     await downloadExcelUtil(
       '/internship/selection/excel',

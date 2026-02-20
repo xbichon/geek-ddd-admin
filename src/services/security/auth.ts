@@ -15,14 +15,6 @@ export interface LoginRequest {
   userType?: 'TEACHER';
 }
 
-// 登录响应类型
-export interface LoginResponse {
-  token: string;
-  refreshToken: string;
-  expiresIn: number;
-  // 可以根据实际响应结构调整
-}
-
 // 认证 Service
 export const authService = {
   /**
@@ -38,7 +30,7 @@ export const authService = {
    * @param loginData 登录数据
    * @returns Promise<LoginResponse>
    */
-  login: (loginData: LoginRequest): Promise<LoginResponse> => {
+  login: (loginData: LoginRequest): Promise<string> => {
     loginData.userType = 'TEACHER'; // 设置为教师登录
     return authHttp.post('/auth/login', loginData);
   },

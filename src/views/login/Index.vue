@@ -86,7 +86,7 @@ const handleSubmit = async () => {
     });
 
     console.log('登录成功', response);
-    localStorage.setItem('authorization', response.token);
+    localStorage.setItem('authorization', response);
     router.push('/');
 
   } catch (error: any) {
