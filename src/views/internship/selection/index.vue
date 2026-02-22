@@ -2,29 +2,29 @@
   <div class="internship-management">
     <!-- 筛选区域 -->
     <el-card shadow="never" class="filter-card">
-      <el-form :inline="true" class="demo-form-inline">
+      <el-form :inline="true" :model="searchForm">
         <el-form-item label="论文选题">
-          <el-select v-model="searchForm.topic" placeholder="请选择论文选题" style="width: 160px;">
+          <el-select v-model="searchForm.topic" placeholder="请选择论文选题" clearable style="width: 160px;">
             <el-option v-for="thesis in thesisList" :key="thesis.id" :label="thesis.title" :value="thesis.id" />
           </el-select>
         </el-form-item>
 
         <!-- 指导老师筛选 -->
         <el-form-item label="指导老师">
-          <el-select v-model="searchForm.advisor" placeholder="请选择指导老师" style="width: 140px;" clearable>
+          <el-select v-model="searchForm.advisor" placeholder="请选择指导老师" clearable style="width: 140px;">
             <el-option v-for="advisor in advisorList" :key="advisor" :label="advisor" :value="advisor" />
           </el-select>
         </el-form-item>
 
         <!-- 班级筛选 -->
         <el-form-item label="班级">
-          <el-select v-model="searchForm.className" placeholder="请选择班级" style="width: 140px;" clearable>
+          <el-select v-model="searchForm.className" placeholder="请选择班级" clearable style="width: 140px;">
             <el-option v-for="className in classList" :key="className" :label="className" :value="className" />
           </el-select>
         </el-form-item>
 
         <el-form-item label="姓名">
-          <el-input v-model="searchForm.name" placeholder="请输入姓名" style="width: 140px;" />
+          <el-input v-model="searchForm.name" placeholder="请输入姓名" clearable style="width: 140px;" />
         </el-form-item>
 
         <el-form-item>
@@ -68,7 +68,7 @@
       <!-- 分页 -->
       <div class="pagination-container">
         <el-pagination v-model:current-page="pagination.pageNum" v-model:page-size="pagination.pageSize"
-          :page-sizes="[20, 50, 100]" :total="pagination.total" layout="total, sizes, prev, pager, next, jumper"
+          :page-sizes="[10,20, 50, 100]" :total="pagination.total" layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange" @current-change="handleCurrentChange" />
       </div>
     </el-card>
@@ -83,49 +83,34 @@ import {
   thesisService,
   selectionService,
   type SelectionRecord,
-  type ThesisItem,
-  type PageData
+  type SelectionQuery,
+  type ThesisItem
 } from '@/services/internship'
 import { downloadExcel as downloadExcelUtil } from '@/utils/download'
 import { ElMessage } from 'element-plus'
 
-// 接口定义
-interface SearchParams {
-  topic: string | number
-  name: string
-  studentId: string
-  advisor: string
-  className: string
+// 状态管理
+const loading = ref(false)
+const initialSearchForm = { topic: '', name: '', advisor: '', className: '' }
+const initialSearchParams: SelectionQuery = {
+  studentName: undefined,
+  advisorName: undefined,
+  className: undefined,
+  thesisId: undefined,
+  pageNum: 1,
+  pageSize: 10
 }
 
-interface PaginationConfig {
-  pageNum: number
-  pageSize: number
-  total: number
-}
+// 三层数据结构
+const searchForm = reactive({ ...initialSearchForm })     // 表单数据
+const tableData = ref<SelectionRecord[]>([])              // 表格数据
+const pagination = reactive({ pageNum: 1, pageSize: 10, total: 0 })
+let searchParams: SelectionQuery = { ...initialSearchParams }  // 查询参数（非响应式）
 
-// 响应式数据
-const loading = ref<boolean>(false)
-const tableData = ref<SelectionRecord[]>([])
+// 下拉列表数据
 const thesisList = ref<ThesisItem[]>([])
 const advisorList = ref<string[]>([])
 const classList = ref<string[]>([])
-
-// 表单数据
-const searchForm = reactive<SearchParams>({
-  topic: '',
-  name: '',
-  studentId: '',
-  advisor: '',
-  className: ''
-})
-
-// 分页配置
-const pagination = reactive<PaginationConfig>({
-  pageNum: 1,
-  pageSize: 20,
-  total: 0
-})
 
 // 工具方法
 const getSelectionTypeTag = (type: string): 'success' | 'warning' => {
@@ -164,58 +149,51 @@ const getThesisList = async (): Promise<void> => {
   }
 }
 
-const fetchData = async (): Promise<void> => {
+// 数据获取
+const fetchData = async () => {
   loading.value = true
   try {
-    const params = {
-      studentName: searchForm.name || undefined,
-      advisorName: searchForm.advisor || undefined,
-      className: searchForm.className || undefined,
-      thesisId: searchForm.topic ? String(searchForm.topic) : undefined,
-      pageNum: pagination.pageNum,
-      pageSize: pagination.pageSize
-    }
-
-    const res = await selectionService.getList(params)
-    const data: PageData<SelectionRecord> = res
-
-    tableData.value = data.records
-    pagination.total = data.total
-    pagination.pageNum = data.pageNum
-    pagination.pageSize = data.pageSize
-  } catch (error) {
-    ElMessage.error('获取数据失败')
+    const res = await selectionService.getList(searchParams)
+    tableData.value = res.records
+    pagination.total = res.total
   } finally {
     loading.value = false
   }
 }
 
-// 事件处理方法
-const handleSearch = (): void => {
+// 搜索处理：点击搜索才更新查询条件
+const handleSearch = () => {
+  searchParams = {
+    studentName: searchForm.name || undefined,
+    advisorName: searchForm.advisor || undefined,
+    className: searchForm.className || undefined,
+    thesisId: searchForm.topic ? String(searchForm.topic) : undefined,
+    pageNum: 1,
+    pageSize: pagination.pageSize
+  }
   pagination.pageNum = 1
   fetchData()
 }
 
-const handleReset = (): void => {
-  Object.assign(searchForm, {
-    topic: '',
-    name: '',
-    studentId: '',
-    advisor: '',
-    className: ''
-  })
+// 重置处理
+const handleReset = () => {
+  Object.assign(searchForm, initialSearchForm)
+  searchParams = { ...initialSearchParams }
   pagination.pageNum = 1
   fetchData()
 }
 
-const handleSizeChange = (val: number): void => {
+// 分页处理
+const handleSizeChange = (val: number) => {
   pagination.pageSize = val
   pagination.pageNum = 1
+  searchParams = { ...searchParams, pageSize: val, pageNum: 1 }
   fetchData()
 }
 
-const handleCurrentChange = (val: number): void => {
+const handleCurrentChange = (val: number) => {
   pagination.pageNum = val
+  searchParams = { ...searchParams, pageNum: val }
   fetchData()
 }
 
