@@ -38,7 +38,7 @@ const router = createRouter({
             {
               path: 'topic',
               name: 'internship-topic',
-              component: () => import('@/views/internship/index.vue'),
+              component: () => import('@/views/internship/selection/index.vue'),
               meta: { title: '选题管理' }
             },
             {
