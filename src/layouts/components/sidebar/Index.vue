@@ -13,7 +13,7 @@
                 <el-menu-item v-if="menu_level1.type === 'MENU'" :index="menu_level1.name"
                     :route="{ name: menu_level1.name, meta: { title: menu_level1.title } }">
                     <el-icon>
-                        <location />
+                        <component :is="getIconComponent(menu_level1.icon) || 'location'" />
                     </el-icon>
                     <span> {{ menu_level1.title }}</span>
 
@@ -25,7 +25,7 @@
                     :index="menu_level1.name">
                     <template #title>
                         <el-icon>
-                            <location />
+                            <component :is="getIconComponent(menu_level1.icon) || 'location'" />
                         </el-icon>
                         <span>{{ menu_level1.title }}</span>
                     </template>
@@ -33,7 +33,10 @@
                     <el-menu-item v-for="menu_level2 in menu_level1.children" :key="menu_level2.name"
                         :index="menu_level2.name"
                         :route="{ name: menu_level2.name, meta: { title: menu_level2.title } }">
-                        {{ menu_level2.title }}
+                        <el-icon>
+                            <component :is="getIconComponent(menu_level2.icon) || 'location'" />
+                        </el-icon>
+                        <span>{{ menu_level2.title }}</span>
                     </el-menu-item>
                 </el-sub-menu>
             </template>
@@ -42,9 +45,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, shallowRef, defineAsyncComponent } from 'vue'
 import { menuService, type MenuItem } from '@/services/manager'
 import { type MenuItemClicked } from 'element-plus'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
 interface Props {
     isCollapse?: boolean
@@ -62,6 +66,12 @@ const emit = defineEmits<{
 
 const menuData = ref<MenuItem[]>([])
 const loading = ref(false)
+
+// 动态获取图标组件
+const getIconComponent = (iconName?: string) => {
+    if (!iconName) return null
+    return ElementPlusIconsVue[iconName as keyof typeof ElementPlusIconsVue]
+}
 
 function handleMenuSelect(index: string, _indexPath: string, menuItem: MenuItemClicked) {
     const title = (menuItem.route as { meta?: { title?: string } })?.meta?.title || '未命名'
