@@ -2,7 +2,7 @@
     <el-aside :style="{ width: isCollapse ? '64px' : '200px' }">
         <div class="header">
             <img class="logo" src="@/assets/logo.png" alt="logo">
-            <span class="title">后台管理</span>
+            <span v-show="!isCollapse" class="title">后台管理</span>
         </div>
         <el-menu :default-active="activeTab" class="menu" :collapse="isCollapse" router :collapse-transition="false"
             @select="handleMenuSelect" unique-opened>
