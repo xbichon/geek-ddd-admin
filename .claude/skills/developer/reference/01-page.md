@@ -1,6 +1,8 @@
 # 页面开发规范
 
-## 1、文件规范
+## 1. 项目文件结构规范
+
+### 1.1 页面文件组织
 
 **要求**：创建页面时，必须创建父级目录，目录内放置 `Index.vue`，禁止直接创建 `user.vue` 等命名方式。
 
@@ -18,7 +20,26 @@ views/User.vue
 views/user.vue
 ```
 
-## 2、函数命名（camelCase）
+### 1.2 样式文件组织
+
+**所有样式必须分离到同名 SCSS 文件**，Vue 文件中只保留 `@import`：
+
+```
+views/user/
+├── Index.vue          # 逻辑代码
+└── Index.scss         # 样式代码（同名）
+```
+
+```vue
+<!-- Index.vue -->
+<style scoped>
+@import './Index.scss';
+</style>
+```
+
+## 2. 页面代码编写规范
+
+### 2.1 函数命名规范（camelCase）
 
 | 场景 | 前缀 | 示例 |
 |------|------|------|
@@ -29,7 +50,7 @@ views/user.vue
 
 **禁止**：`snake_case`（如 `menu_click`）
 
-## 3、响应式变量命名
+### 2.2 响应式变量命名规范
 
 | 类型 | 命名规则 | 示例 |
 |------|---------|------|
@@ -38,7 +59,7 @@ views/user.vue
 | Ref 数组 | 复数名词 | `tabs`、`userList` |
 | Computed | 名词或 `is`/`has` 前缀 | `displayName`、`isValid` |
 
-## 4、代码组织顺序
+### 2.3 代码组织顺序
 
 ```vue
 <script setup>
@@ -68,26 +89,9 @@ onMounted(() => { ... })
 </script>
 ```
 
-## 5、样式规范
+## 3. 样式编写规范
 
-### （1）文件组织
-
-**所有样式必须分离到同名 SCSS 文件**，Vue 文件中只保留 `@import`：
-
-```
-views/user/
-├── Index.vue          # 逻辑代码
-└── Index.scss         # 样式代码（同名）
-```
-
-```vue
-<!-- Index.vue -->
-<style scoped>
-@import './Index.scss';
-</style>
-```
-
-### （2）命名规则
+### 3.1 命名规则
 
 | 项目 | 规则 | 示例 |
 |------|------|------|
@@ -95,9 +99,8 @@ views/user/
 | SCSS 变量 | $kebab-case | `$primary-color` |
 | 文件命名 | 与 Vue 文件同名 | `Index.vue` → `Index.scss` |
 
-### （3）样式编写原则
+### 3.2 样式编写原则
 
 - 必须使用 `<style scoped>` 避免全局污染
 - 避免使用深层选择器 `:deep()`，必要时通过 props 或事件传递
 - 颜色、尺寸等值优先使用 CSS 变量或 SCSS 变量
-
