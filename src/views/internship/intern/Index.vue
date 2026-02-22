@@ -97,19 +97,19 @@ import {
   internService,
   type InternItem,
   type InternQuery,
-  type InternPaginationData
+  type PageData
 } from '@/services/internship'
 
 // 加载状态
 const loading = ref(false)
 
-// 搜索表单数据
-const searchForm = reactive<InternQuery>({
+// 搜索表单数据（纯业务字段，不包含分页）
+const searchForm = reactive({
   studentNo: '',
   studentName: '',
   className: '',
   advisorName: '',
-  selected: undefined
+  selected: undefined as boolean | undefined
 })
 
 // 表格数据
@@ -136,7 +136,7 @@ const fetchData = async () => {
       pageSize: pagination.pageSize
     }
 
-    const res: InternPaginationData = await internService.getList(query)
+    const res = await internService.getList(query)
     tableData.value = res.records
     pagination.total = res.total
     pagination.pageNum = res.pageNum

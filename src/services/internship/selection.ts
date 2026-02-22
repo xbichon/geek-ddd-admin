@@ -1,4 +1,5 @@
-import { http } from '@/utils/http';
+import { fetchPage } from '@/utils/pagination';
+import type { PageData, PageQuery } from '@/utils/pagination';
 
 /**
  * 选题记录
@@ -16,20 +17,11 @@ export interface SelectionRecord {
   className: string;
 }
 
-/**
- * 分页数据
- */
-export interface PaginationData {
-  records: SelectionRecord[];
-  total: number;
-  pageNum: number;
-  pageSize: number;
-}
 
 /**
  * 选题查询参数
  */
-export interface SelectionQuery {
+export interface SelectionQuery extends PageQuery {
   studentName?: string;
   advisorName?: string;
   className?: string;
@@ -43,9 +35,8 @@ export const selectionService = {
   /**
    * 获取选题列表（带搜索条件）
    * @param params 搜索参数
-   * @returns Promise<PaginationData>
+   * @returns Promise<PageData<SelectionRecord>>
    */
-  getList: (params: SelectionQuery = {}): Promise<PaginationData> => {
-    return http.get('/internship/selection/list', { params });
-  }
+  getList: (params: SelectionQuery = {}): Promise<PageData<SelectionRecord>> =>
+    fetchPage<SelectionRecord, SelectionQuery>('/internship/selection/list', params)
 };

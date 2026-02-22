@@ -1,13 +1,12 @@
-import { http } from '@/utils/http';
+import { fetchPage } from '@/utils/pagination';
+import type { PageData, PageQuery } from '@/utils/pagination';
 
-export interface InternQuery {
+export interface InternQuery extends PageQuery {
   advisorName?: string;
   className?: string;
   studentNo?: string;
   studentName?: string;
   selected?: boolean;
-  pageNum?: number;
-  pageSize?: number;
 }
 
 export interface InternItem {
@@ -19,17 +18,7 @@ export interface InternItem {
   selected: boolean;
 }
 
-export interface InternPaginationData {
-  records: InternItem[];
-  total: number;
-  pageNum: number;
-  pageSize: number;
-}
-
 export const internService = {
-  getList: (query: InternQuery): Promise<InternPaginationData> => {
-    return http.get('/internship/intern/list', {
-      params: query
-    });
-  }
+  getList: (query: InternQuery): Promise<PageData<InternItem>> =>
+    fetchPage<InternItem, InternQuery>('/internship/intern/list', query)
 };

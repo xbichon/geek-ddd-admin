@@ -88,7 +88,7 @@ import {
   selectionService,
   type SelectionRecord,
   type ThesisItem,
-  type PaginationData
+  type PageData
 } from '@/services/internship'
 import { downloadExcel as downloadExcelUtil } from '@/utils/download'
 
@@ -164,7 +164,7 @@ const fetchData = async () => {
       thesisId: thesisId
     })
 
-    const data: PaginationData = res
+    const data: PageData<SelectionRecord> = res
     tableData.value = data.records
     pagination.total = data.total
     pagination.pageNum = data.pageNum
