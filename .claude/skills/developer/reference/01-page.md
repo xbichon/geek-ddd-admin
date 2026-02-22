@@ -1,12 +1,8 @@
 # 页面开发规范
 
-## 1、文件与组件命名
+## 1、文件规范
 
-| 类型 | 命名规则 | 示例 |
-|------|---------|------|
-| 页面文件 | 目录小写，`Index.vue` 大写 | `views/user/Index.vue` |
-
-**必须要求**：创建页面时，必须创建父级目录，目录内放置 `Index.vue`，禁止直接创建 `user.vue` 等命名方式。
+**要求**：创建页面时，必须创建父级目录，目录内放置 `Index.vue`，禁止直接创建 `user.vue` 等命名方式。
 
 ```
 正确：
@@ -105,49 +101,3 @@ views/user/
 - 避免使用深层选择器 `:deep()`，必要时通过 props 或事件传递
 - 颜色、尺寸等值优先使用 CSS 变量或 SCSS 变量
 
-## 6、分页表格规范
-
-### （1）分页参数
-
-所有分页表格统一使用以下参数名：
-
-| 参数 | 类型 | 说明 |
-|------|------|------|
-| `pageNum` | number | 当前页码，从 1 开始 |
-| `pageSize` | number | 每页条数 |
-
-
-```ts
-// 正确
-const searchForm = reactive({
-  // 业务筛选字段（可选）
-  studentName: '',
-  className: '',
-  // 分页参数（必需）
-  pageNum: 1,
-  pageSize: 10
-})
-```
-
-### （2）分页事件
-
-| 事件 | 函数命名 |
-|------|---------|
-| 页码变化 | `handleCurrentChange` |
-| 每页条数变化 | `handleSizeChange` |
-
-### （3）表格列宽
-
-| 场景 | 属性 | 说明 |
-|------|------|------|
-| 固定宽度 | `width` | 内容长度固定的列（如 ID、状态标签） |
-| 自适应宽度 | `min-width` | 内容长度变化的列（如姓名、班级） |
-
-表格需添加 `fit` 属性让列宽自适应容器。
-
-```vue
-<el-table :data="tableData" fit>
-  <el-table-column prop="id" label="ID" width="60" />
-  <el-table-column prop="name" label="姓名" min-width="100" />
-</el-table>
-```
