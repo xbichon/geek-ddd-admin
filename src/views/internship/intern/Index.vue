@@ -112,6 +112,9 @@ const initialSearchForm = {
   selected: undefined as boolean | undefined
 }
 
+// 搜索表单数据（纯业务字段，不包含分页）
+const searchForm = reactive({ ...initialSearchForm })
+
 // 查询参数初始状态
 const initialSearchParams: InternQuery = {
   studentNo: undefined,
@@ -122,9 +125,6 @@ const initialSearchParams: InternQuery = {
   pageNum: 1,
   pageSize: 10
 }
-
-// 搜索表单数据（纯业务字段，不包含分页）
-const searchForm = reactive({ ...initialSearchForm })
 
 // 当前查询参数（用于分页和搜索）
 let searchParams: InternQuery = { ...initialSearchParams }
