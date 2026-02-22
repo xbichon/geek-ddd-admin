@@ -6,8 +6,14 @@
         <el-form-item label="姓名">
           <el-input v-model="searchForm.studentName" placeholder="请输入姓名" clearable style="width: 140px" />
         </el-form-item>
+        <el-form-item label="学号">
+          <el-input v-model="searchForm.studentNo" placeholder="请输入学号" clearable style="width: 140px" />
+        </el-form-item>
         <el-form-item label="班级">
           <el-input v-model="searchForm.className" placeholder="请输入班级" clearable style="width: 140px" />
+        </el-form-item>
+        <el-form-item label="指导老师">
+          <el-input v-model="searchForm.advisorName" placeholder="请输入指导老师" clearable style="width: 140px" />
         </el-form-item>
         <el-form-item>
           <el-button @click="handleReset">重置</el-button>
@@ -21,7 +27,9 @@
       <el-table :data="tableData" style="width: 100%" v-loading="loading" fit>
         <el-table-column prop="id" label="ID" width="60" />
         <el-table-column prop="name" label="姓名" min-width="100" />
+        <el-table-column prop="studentNo" label="学号" min-width="120" />
         <el-table-column prop="className" label="班级" min-width="140" />
+        <el-table-column prop="advisorName" label="指导老师" min-width="120" />
         <el-table-column prop="selected" label="选题状态" width="90">
           <template #default="scope">
             <el-tag :type="scope.row.selected ? 'success' : 'info'">
@@ -53,8 +61,15 @@ import { internService, type InternItem, type InternQuery } from '@/services/int
 
 // 状态管理
 const loading = ref(false)
-const initialSearchForm = { studentName: '', className: '' }
-const initialSearchParams: InternQuery = { studentName: undefined, className: undefined, pageNum: 1, pageSize: 10 }
+const initialSearchForm = { studentName: '', studentNo: '', className: '', advisorName: '' }
+const initialSearchParams: InternQuery = { 
+  studentName: undefined, 
+  studentNo: undefined,
+  className: undefined, 
+  advisorName: undefined,
+  pageNum: 1, 
+  pageSize: 20 
+}
 
 const searchForm = reactive({ ...initialSearchForm })
 const tableData = ref<InternItem[]>([])
@@ -77,7 +92,9 @@ const fetchData = async () => {
 const handleSearch = () => {
   searchParams = {
     studentName: searchForm.studentName || undefined,
+    studentNo: searchForm.studentNo || undefined,
     className: searchForm.className || undefined,
+    advisorName: searchForm.advisorName || undefined,
     pageNum: 1,
     pageSize: pagination.pageSize
   }
