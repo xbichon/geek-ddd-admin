@@ -200,7 +200,7 @@ const handleCurrentChange = (val: number) => {
 const downloadExcel = async (): Promise<void> => {
   try {
     loading.value = true
-    await downloadExcelUtil('/internship/selection/excel', {}, '实习选题列表')
+    await downloadExcelUtil('/internship/selection/export', {}, '实习选题列表')
   } catch (error) {
     ElMessage.error('导出Excel失败')
   } finally {

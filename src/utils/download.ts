@@ -30,14 +30,14 @@ export async function downloadExcel(
 }
 
 /** API 基础路径 */
-const API_BASE_URL = import.meta.env.VITE_APP_API_BASE_URL || '';
+const API_BASE_URL = import.meta.env.VITE_ADMIN_API_URL || '';
                   
 /** 构造带查询参数的 URL */
 function buildUrl(baseUrl: string, params: Record<string, string | number | boolean | undefined>): string {
 
   console.log('构建下载 URL:', { API_BASE_URL,baseUrl, params });
 
-  const fullPath = API_BASE_URL + 'admin' + baseUrl;
+  const fullPath = API_BASE_URL  + baseUrl;
   const url = new URL(fullPath, window.location.origin);
   Object.entries(params).forEach(([key, value]) => {
     if (value != null && value !== '') {
