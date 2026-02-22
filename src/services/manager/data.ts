@@ -60,6 +60,12 @@ const menuData: MenuItem[] = [
                 type: 'MENU',
                 name: 'internship-topic',
                 // permission: 'internship:topic:read',
+            },
+            {
+                title: '学生管理',
+                type: 'MENU',
+                name: 'internship-intern',
+                // permission: 'internship:intern:read',
             }
         ]
     }
