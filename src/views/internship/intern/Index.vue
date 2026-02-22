@@ -15,6 +15,12 @@
         <el-form-item label="指导老师">
           <el-input v-model="searchForm.advisorName" placeholder="请输入指导老师" clearable style="width: 140px" />
         </el-form-item>
+        <el-form-item label="选题状态">
+          <el-select v-model="searchForm.selected" placeholder="请选择选题状态" clearable style="width: 140px">
+            <el-option label="已选题" :value="true" />
+            <el-option label="未选题" :value="false" />
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button @click="handleReset">重置</el-button>
           <el-button type="primary" @click="handleSearch">搜索</el-button>
@@ -61,12 +67,13 @@ import { internService, type InternItem, type InternQuery } from '@/services/int
 
 // 状态管理
 const loading = ref(false)
-const initialSearchForm = { studentName: '', studentNo: '', className: '', advisorName: '' }
+const initialSearchForm = { studentName: '', studentNo: '', className: '', advisorName: '', selected: undefined as boolean | undefined }
 const initialSearchParams: InternQuery = { 
   studentName: undefined, 
   studentNo: undefined,
   className: undefined, 
   advisorName: undefined,
+  selected: undefined,
   pageNum: 1, 
   pageSize: 20 
 }
@@ -97,6 +104,7 @@ const handleSearch = () => {
     studentNo: searchForm.studentNo || undefined,
     className: searchForm.className || undefined,
     advisorName: searchForm.advisorName || undefined,
+    selected: searchForm.selected,
     pageNum: 1,
     pageSize: pagination.pageSize
   }
