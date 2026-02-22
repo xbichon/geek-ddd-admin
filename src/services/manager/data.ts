@@ -29,6 +29,28 @@ const menuData: MenuItem[] = [
         // permission: 'manager:dashboard:read',
     },
     {
+        title: '实习管理',
+        type: 'DIRECTORY',
+        name: 'internship',
+        icon: 'Collection',
+        children: [
+            {
+                title: '选题管理',
+                type: 'MENU',
+                name: 'internship-topic',
+                icon: 'Edit',
+                // permission: 'internship:topic:read',
+            },
+            {
+                title: '学生管理',
+                type: 'MENU',
+                name: 'internship-intern',
+                icon: 'User',
+                // permission: 'internship:intern:read',
+            }
+        ]
+    },
+    {
         title: '系统管理',
         type: 'DIRECTORY',
         name: 'manager',
@@ -54,28 +76,6 @@ const menuData: MenuItem[] = [
                 name: 'manager-role',
                 icon: 'UserFilled',
                 permission: 'manager:role:read',
-            }
-        ]
-    },
-    {
-        title: '实习管理',
-        type: 'DIRECTORY',
-        name: 'internship',
-        icon: 'Collection',
-        children: [
-            {
-                title: '选题管理',
-                type: 'MENU',
-                name: 'internship-topic',
-                icon: 'Edit',
-                // permission: 'internship:topic:read',
-            },
-            {
-                title: '学生管理',
-                type: 'MENU',
-                name: 'internship-intern',
-                icon: 'User',
-                // permission: 'internship:intern:read',
             }
         ]
     }
