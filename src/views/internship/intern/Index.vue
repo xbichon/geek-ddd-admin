@@ -103,14 +103,31 @@ import {
 // 加载状态
 const loading = ref(false)
 
-// 搜索表单数据（纯业务字段，不包含分页）
-const searchForm = reactive({
+// 表单初始状态
+const initialSearchForm = {
   studentNo: '',
   studentName: '',
   className: '',
   advisorName: '',
   selected: undefined as boolean | undefined
-})
+}
+
+// 查询参数初始状态
+const initialSearchParams: InternQuery = {
+  studentNo: undefined,
+  studentName: undefined,
+  className: undefined,
+  advisorName: undefined,
+  selected: undefined,
+  pageNum: 1,
+  pageSize: 10
+}
+
+// 搜索表单数据（纯业务字段，不包含分页）
+const searchForm = reactive({ ...initialSearchForm })
+
+// 当前查询参数（用于分页和搜索）
+let searchParams: InternQuery = { ...initialSearchParams }
 
 // 表格数据
 const tableData = ref<InternItem[]>([])
@@ -126,17 +143,7 @@ const pagination = reactive({
 const fetchData = async () => {
   loading.value = true
   try {
-    const query: InternQuery = {
-      studentNo: searchForm.studentNo || undefined,
-      studentName: searchForm.studentName || undefined,
-      className: searchForm.className || undefined,
-      advisorName: searchForm.advisorName || undefined,
-      selected: searchForm.selected,
-      pageNum: pagination.pageNum,
-      pageSize: pagination.pageSize
-    }
-
-    const res = await internService.getList(query)
+    const res = await internService.getList(searchParams)
     tableData.value = res.records
     pagination.total = res.total
     pagination.pageNum = res.pageNum
@@ -148,18 +155,29 @@ const fetchData = async () => {
 
 // 搜索
 const handleSearch = () => {
-  pagination.pageNum = 1
+  // 更新 searchParams 为当前表单值
+  searchParams = {
+    studentNo: searchForm.studentNo || undefined,
+    studentName: searchForm.studentName || undefined,
+    className: searchForm.className || undefined,
+    advisorName: searchForm.advisorName || undefined,
+    selected: searchForm.selected,
+    pageNum: 1, // 重置页码
+    pageSize: pagination.pageSize
+  }
+
+  // 重新获取数据（fetchData会自动更新分页信息）
   fetchData()
 }
 
 // 重置
 const handleReset = () => {
-  searchForm.studentNo = ''
-  searchForm.studentName = ''
-  searchForm.className = ''
-  searchForm.advisorName = ''
-  searchForm.selected = undefined
-  pagination.pageNum = 1
+  // 重置表单
+  Object.assign(searchForm, initialSearchForm)
+  
+  // 重置搜索参数
+  searchParams = { ...initialSearchParams }
+  
   fetchData()
 }
 
@@ -167,12 +185,14 @@ const handleReset = () => {
 const handleSizeChange = (val: number) => {
   pagination.pageSize = val
   pagination.pageNum = 1
+  searchParams = { ...searchParams, pageSize: val, pageNum: 1 }
   fetchData()
 }
 
 // 页码变化
 const handleCurrentChange = (val: number) => {
   pagination.pageNum = val
+  searchParams = { ...searchParams, pageNum: val }
   fetchData()
 }
 
