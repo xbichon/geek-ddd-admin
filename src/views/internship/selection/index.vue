@@ -77,21 +77,22 @@
         :data="tableData" 
         style="width: 100%" 
         v-loading="loading"
+        fit
       >
-        <el-table-column prop="selectionId" label="ID" width="40" />
-        <el-table-column prop="studentNumber" label="学号" width="140" />
-        <el-table-column prop="studentName" label="姓名" width="80" />
-        <el-table-column prop="className" label="班级" width="150" />
-        <el-table-column prop="advisorName" label="指导老师" width="100" />
-        <el-table-column prop="thesisTitle" label="论文选题" width="140" />
+        <el-table-column prop="selectionId" label="ID" width="60" />
+        <el-table-column prop="studentNumber" label="学号" min-width="120" />
+        <el-table-column prop="studentName" label="姓名" min-width="80" />
+        <el-table-column prop="className" label="班级" min-width="140" />
+        <el-table-column prop="advisorName" label="指导老师" min-width="100" />
+        <el-table-column prop="thesisTitle" label="论文选题" min-width="180" />
         
-        <el-table-column prop="achievementType" label="成果形式" width="100">
+        <el-table-column prop="achievementType" label="成果形式" min-width="100">
           <template #default="scope">
             <el-tag type="primary">{{ scope.row.achievementType }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column prop="selectionType" label="选题类型" width="100">
+        <el-table-column prop="selectionType" label="选题类型" min-width="100">
           <template #default="scope">
             <el-tag :type="getSelectionTypeTag(scope.row.selectionType)">
               {{ getSelectionTypeText(scope.row.selectionType) }}
