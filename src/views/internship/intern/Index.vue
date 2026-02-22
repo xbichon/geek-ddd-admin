@@ -44,7 +44,7 @@
         <el-pagination
           v-model:current-page="pagination.pageNum"
           v-model:page-size="pagination.pageSize"
-          :page-sizes="[10, 20, 50]"
+          :page-sizes="[20, 50,100]"
           :total="pagination.total"
           layout="total, sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
@@ -73,7 +73,7 @@ const initialSearchParams: InternQuery = {
 
 const searchForm = reactive({ ...initialSearchForm })
 const tableData = ref<InternItem[]>([])
-const pagination = reactive({ pageNum: 1, pageSize: 10, total: 0 })
+const pagination = reactive({ pageNum: 1, pageSize: 20, total: 0 })
 let searchParams: InternQuery = { ...initialSearchParams }
 
 // 数据获取
@@ -83,6 +83,8 @@ const fetchData = async () => {
     const res = await internService.getList(searchParams)
     tableData.value = res.records
     pagination.total = res.total
+    pagination.pageNum = res.pageNum
+    pagination.pageSize = res.pageSize
   } finally {
     loading.value = false
   }

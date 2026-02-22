@@ -4,60 +4,27 @@
     <el-card shadow="never" class="filter-card">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="论文选题">
-          <el-select 
-            v-model="searchForm.topic" 
-            placeholder="请选择论文选题" 
-            style="width: 160px;"
-          >
-            <el-option 
-              v-for="thesis in thesisList" 
-              :key="thesis.id" 
-              :label="thesis.title" 
-              :value="thesis.id"
-            />
+          <el-select v-model="searchForm.topic" placeholder="请选择论文选题" style="width: 160px;">
+            <el-option v-for="thesis in thesisList" :key="thesis.id" :label="thesis.title" :value="thesis.id" />
           </el-select>
         </el-form-item>
 
         <!-- 指导老师筛选 -->
         <el-form-item label="指导老师">
-          <el-select 
-            v-model="searchForm.advisor" 
-            placeholder="请选择指导老师" 
-            style="width: 140px;" 
-            clearable
-          >
-            <el-option 
-              v-for="advisor in advisorList" 
-              :key="advisor" 
-              :label="advisor" 
-              :value="advisor"
-            />
+          <el-select v-model="searchForm.advisor" placeholder="请选择指导老师" style="width: 140px;" clearable>
+            <el-option v-for="advisor in advisorList" :key="advisor" :label="advisor" :value="advisor" />
           </el-select>
         </el-form-item>
 
         <!-- 班级筛选 -->
         <el-form-item label="班级">
-          <el-select 
-            v-model="searchForm.className" 
-            placeholder="请选择班级" 
-            style="width: 140px;" 
-            clearable
-          >
-            <el-option 
-              v-for="className in classList" 
-              :key="className" 
-              :label="className" 
-              :value="className"
-            />
+          <el-select v-model="searchForm.className" placeholder="请选择班级" style="width: 140px;" clearable>
+            <el-option v-for="className in classList" :key="className" :label="className" :value="className" />
           </el-select>
         </el-form-item>
 
         <el-form-item label="姓名">
-          <el-input 
-            v-model="searchForm.name" 
-            placeholder="请输入姓名" 
-            style="width: 140px;"
-          />
+          <el-input v-model="searchForm.name" placeholder="请输入姓名" style="width: 140px;" />
         </el-form-item>
 
         <el-form-item>
@@ -73,19 +40,14 @@
 
     <!-- 表格区域 -->
     <el-card shadow="never" class="table-card">
-      <el-table 
-        :data="tableData" 
-        style="width: 100%" 
-        v-loading="loading"
-        fit
-      >
+      <el-table :data="tableData" style="width: 100%" v-loading="loading" fit>
         <el-table-column prop="selectionId" label="ID" width="60" />
         <el-table-column prop="studentNumber" label="学号" min-width="120" />
         <el-table-column prop="studentName" label="姓名" min-width="80" />
         <el-table-column prop="className" label="班级" min-width="140" />
         <el-table-column prop="advisorName" label="指导老师" min-width="100" />
         <el-table-column prop="thesisTitle" label="论文选题" min-width="180" />
-        
+
         <el-table-column prop="achievementType" label="成果形式" min-width="100">
           <template #default="scope">
             <el-tag type="primary">{{ scope.row.achievementType }}</el-tag>
@@ -99,21 +61,15 @@
             </el-tag>
           </template>
         </el-table-column>
-        
+
         <el-table-column prop="groupMembers" label="小组成员" min-width="150" />
       </el-table>
 
       <!-- 分页 -->
       <div class="pagination-container">
-        <el-pagination 
-          v-model:current-page="pagination.pageNum" 
-          v-model:page-size="pagination.pageSize"
-          :page-sizes="[10, 20, 50]" 
-          :total="pagination.total" 
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange" 
-          @current-change="handleCurrentChange" 
-        />
+        <el-pagination v-model:current-page="pagination.pageNum" v-model:page-size="pagination.pageSize"
+          :page-sizes="[20, 50, 100]" :total="pagination.total" layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleSizeChange" @current-change="handleCurrentChange" />
       </div>
     </el-card>
   </div>
@@ -167,7 +123,7 @@ const searchForm = reactive<SearchParams>({
 // 分页配置
 const pagination = reactive<PaginationConfig>({
   pageNum: 1,
-  pageSize: 10,
+  pageSize: 20,
   total: 0
 })
 
@@ -215,12 +171,14 @@ const fetchData = async (): Promise<void> => {
       studentName: searchForm.name || undefined,
       advisorName: searchForm.advisor || undefined,
       className: searchForm.className || undefined,
-      thesisId: searchForm.topic ? String(searchForm.topic) : undefined
+      thesisId: searchForm.topic ? String(searchForm.topic) : undefined,
+      pageNum: pagination.pageNum,
+      pageSize: pagination.pageSize
     }
 
     const res = await selectionService.getList(params)
     const data: PageData<SelectionRecord> = res
-    
+
     tableData.value = data.records
     pagination.total = data.total
     pagination.pageNum = data.pageNum
