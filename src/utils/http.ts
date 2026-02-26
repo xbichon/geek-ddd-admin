@@ -104,5 +104,4 @@ export interface ApiResponse<T = any> {
 }
 
 // 默认导出实例
-export const http: HttpService = new HttpService(import.meta.env.VITE_ADMIN_API_URL || '/');
-export const authHttp: HttpService = new HttpService(import.meta.env.VITE_AUTH_API_URL || '/');
+export const http: HttpService = new HttpService(import.meta.env.VITE_API_BASE_URL || '/');

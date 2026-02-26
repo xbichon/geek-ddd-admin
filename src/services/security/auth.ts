@@ -1,4 +1,4 @@
-import { authHttp } from '@/utils/http';
+import { http } from '@/utils/http';
 
 // 验证码响应类型
 export interface CaptchaResponse {
@@ -22,7 +22,7 @@ export const authService = {
    * @returns Promise<CaptchaResponse>
    */
   getCaptcha: (): Promise<CaptchaResponse> => {
-    return authHttp.get('/auth/captcha');
+    return http.get('/auth/captcha');
   },
 
   /**
@@ -32,7 +32,7 @@ export const authService = {
    */
   login: (loginData: LoginRequest): Promise<string> => {
     loginData.userType = 'TEACHER'; // 设置为教师登录
-    return authHttp.post('/auth/login', loginData);
+    return http.post('/auth/login', loginData);
   },
 
   /**
@@ -40,6 +40,6 @@ export const authService = {
    * @returns Promise<void>
    */
   logout: (): Promise<void> => {
-    return authHttp.post('/auth/logout');
+    return http.post('/auth/logout');
   }
 };

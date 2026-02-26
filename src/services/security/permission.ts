@@ -1,4 +1,4 @@
-import { authHttp } from '@/utils/http';
+import { http } from '@/utils/http';
 
 // 权限 Service
 export const permissionService = {
@@ -7,6 +7,6 @@ export const permissionService = {
    * @returns Promise<string[]>
    */
   getPermissions: (): Promise<string[]> => {
-    return authHttp.get('/permission/getCurrent');
+    return http.get('/permission/current');
   }
 };
