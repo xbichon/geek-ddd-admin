@@ -54,7 +54,7 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="selectionType" label="选题类型" min-width="100">
+        <el-table-column prop="selectionType" label="组队方式" min-width="100">
           <template #default="scope">
             <el-tag :type="getSelectionTypeTag(scope.row.selectionType)">
               {{ getSelectionTypeText(scope.row.selectionType) }}
