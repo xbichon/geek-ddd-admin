@@ -10,10 +10,14 @@
           <el-input v-model="searchForm.studentNo" placeholder="请输入学号" clearable style="width: 140px" />
         </el-form-item>
         <el-form-item label="班级">
-          <el-input v-model="searchForm.className" placeholder="请输入班级" clearable style="width: 140px" />
+          <el-select v-model="searchForm.className" placeholder="请选择班级" clearable style="width: 140px">
+            <el-option v-for="className in classList" :key="className" :label="className" :value="className" />
+          </el-select>
         </el-form-item>
         <el-form-item label="指导老师">
-          <el-input v-model="searchForm.advisorName" placeholder="请输入指导老师" clearable style="width: 140px" />
+          <el-select v-model="searchForm.advisorName" placeholder="请选择指导老师" clearable style="width: 140px">
+            <el-option v-for="advisor in advisorList" :key="advisor" :label="advisor" :value="advisor" />
+          </el-select>
         </el-form-item>
         <el-form-item label="选题状态">
           <el-select v-model="searchForm.selected" placeholder="请选择选题状态" clearable style="width: 140px">
@@ -63,7 +67,8 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue'
-import { internService, type InternItem, type InternQuery } from '@/services/internship'
+import { internService, advisorService, classService, type InternItem, type InternQuery } from '@/services/internship'
+import { ElMessage } from 'element-plus'
 
 // 状态管理
 const loading = ref(false)
@@ -82,6 +87,10 @@ const searchForm = reactive({ ...initialSearchForm })
 const tableData = ref<InternItem[]>([])
 const pagination = reactive({ pageNum: 1, pageSize: 20, total: 0 })
 let searchParams: InternQuery = { ...initialSearchParams }
+
+// 下拉列表数据
+const advisorList = ref<string[]>([])
+const classList = ref<string[]>([])
 
 // 数据获取
 const fetchData = async () => {
@@ -133,7 +142,33 @@ const handleCurrentChange = (val: number) => {
   fetchData()
 }
 
-onMounted(() => fetchData())
+// 获取下拉列表数据
+const getAdvisorNames = async (): Promise<void> => {
+  try {
+    const res = await advisorService.getList()
+    advisorList.value = res
+  } catch (error) {
+    ElMessage.error('获取指导老师列表失败')
+  }
+}
+
+const getClassNames = async (): Promise<void> => {
+  try {
+    const res = await classService.getList()
+    classList.value = res
+  } catch (error) {
+    ElMessage.error('获取班级列表失败')
+  }
+}
+
+onMounted(() => {
+  Promise.all([
+    getAdvisorNames(),
+    getClassNames()
+  ]).then(() => {
+    fetchData()
+  })
+})
 </script>
 
 <style scoped>
