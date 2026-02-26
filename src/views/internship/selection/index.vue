@@ -3,8 +3,8 @@
     <!-- 筛选区域 -->
     <el-card shadow="never" class="filter-card">
       <el-form :inline="true" :model="searchForm">
-        <el-form-item label="论文选题">
-          <el-select v-model="searchForm.topic" placeholder="请选择论文选题" clearable style="width: 160px;">
+        <el-form-item label="选题方向">
+          <el-select v-model="searchForm.topic" placeholder="请选择选题方向" clearable style="width: 160px;">
             <el-option v-for="thesis in thesisList" :key="thesis.id" :label="thesis.title" :value="thesis.id" />
           </el-select>
         </el-form-item>
@@ -46,7 +46,7 @@
         <el-table-column prop="studentName" label="姓名" min-width="80" />
         <el-table-column prop="className" label="班级" min-width="140" />
         <el-table-column prop="advisorName" label="指导老师" min-width="100" />
-        <el-table-column prop="thesisTitle" label="论文选题" min-width="180" />
+        <el-table-column prop="thesisTitle" label="选题方向" min-width="180" />
 
         <el-table-column prop="achievementType" label="成果形式" min-width="100">
           <template #default="scope">
