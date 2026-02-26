@@ -63,6 +63,7 @@
         </el-table-column>
 
         <el-table-column prop="groupMembers" label="小组成员" min-width="150" />
+        <el-table-column prop="teamReason" label="组队原因" min-width="180" />
       </el-table>
 
       <!-- 分页 -->
