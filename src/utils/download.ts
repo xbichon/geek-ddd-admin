@@ -30,7 +30,7 @@ export async function downloadExcel(
 }
 
 /** API 基础路径 */
-const API_BASE_URL = import.meta.env.VITE_ADMIN_API_URL || '';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
                   
 /** 构造带查询参数的 URL */
 function buildUrl(baseUrl: string, params: Record<string, string | number | boolean | undefined>): string {
