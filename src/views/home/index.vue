@@ -91,31 +91,33 @@
     <!-- 数据趋势 -->
     <el-row :gutter="20" class="content-row">
       <el-col :span="24">
-        <el-card class="chart-card" shadow="never">
+        <el-card class="chart-card" shadow="never" v-loading="trendLoading">
           <template #header>
             <div class="card-header">
               <span>数据趋势</span>
             </div>
           </template>
-          <div class="chart-placeholder">
+          <div v-if="dailyTrend.length === 0" class="chart-empty">
+            <el-empty description="暂无数据" />
+          </div>
+          <div v-else class="chart-placeholder">
             <div class="chart-grid">
-              <div class="chart-bar" style="height: 70%"></div>
-              <div class="chart-bar" style="height: 45%"></div>
-              <div class="chart-bar" style="height: 80%"></div>
-              <div class="chart-bar" style="height: 60%"></div>
-              <div class="chart-bar" style="height: 90%"></div>
-              <div class="chart-bar" style="height: 55%"></div>
-              <div class="chart-bar" style="height: 75%"></div>
-              <div class="chart-bar" style="height: 65%"></div>
+              <div
+                v-for="(item, index) in dailyTrend"
+                :key="item.date"
+                class="chart-bar-wrapper"
+              >
+                <div
+                  class="chart-bar"
+                  :style="{ height: getTrendHeight(item.selectionCount) + '%' }"
+                  :title="formatDate(item.date) + ': ' + item.selectionCount + '人'"
+                >
+                  <span v-if="item.selectionCount > 0" class="chart-bar-value">{{ item.selectionCount }}</span>
+                </div>
+              </div>
             </div>
             <div class="chart-x-axis">
-              <span>周一</span>
-              <span>周二</span>
-              <span>周三</span>
-              <span>周四</span>
-              <span>周五</span>
-              <span>周六</span>
-              <span>周日</span>
+              <span v-for="item in dailyTrend" :key="item.date">{{ formatDate(item.date) }}</span>
             </div>
           </div>
         </el-card>
@@ -128,7 +130,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { User, Document, TrendCharts, Bell } from '@element-plus/icons-vue';
-import { selectionService, type SelectionStatistics, thesisService, type ThesisRanking } from '@/services/internship';
+import { selectionService, type SelectionStatistics, thesisService, type ThesisRanking, type DailySelection } from '@/services/internship';
 
 // 统计数据
 const statistics = ref<SelectionStatistics>({
@@ -141,9 +143,13 @@ const statistics = ref<SelectionStatistics>({
 // 论文排名数据
 const thesisRanking = ref<ThesisRanking[]>([]);
 
+// 每日选题趋势数据
+const dailyTrend = ref<DailySelection[]>([]);
+
 // 加载状态
 const loading = ref(false);
 const rankingLoading = ref(false);
+const trendLoading = ref(false);
 
 // 获取统计数据
 const getStatistics = async () => {
@@ -166,6 +172,32 @@ const getThesisRanking = async () => {
   } finally {
     rankingLoading.value = false;
   }
+};
+
+// 获取每日选题趋势
+const getDailyTrend = async () => {
+  trendLoading.value = true;
+  try {
+    const data = await thesisService.getDailyTrend();
+    // 按日期升序排序
+    dailyTrend.value = data.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  } finally {
+    trendLoading.value = false;
+  }
+};
+
+// 计算趋势图高度百分比
+const getTrendHeight = (count: number) => {
+  if (dailyTrend.value.length === 0) return 0;
+  const maxCount = Math.max(...dailyTrend.value.map(item => item.selectionCount));
+  if (maxCount === 0) return 0;
+  return Math.round((count / maxCount) * 100);
+};
+
+// 格式化日期显示
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr);
+  return `${date.getMonth() + 1}/${date.getDate()}`;
 };
 
 // 16色渐变配色方案
@@ -205,6 +237,7 @@ const getBarStyle = (item: ThesisRanking, index: number) => {
 onMounted(() => {
   getStatistics();
   getThesisRanking();
+  getDailyTrend();
 });
 </script>
 

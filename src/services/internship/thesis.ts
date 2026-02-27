@@ -22,6 +22,14 @@ export interface ThesisRanking {
 }
 
 /**
+ * 每日选题统计
+ */
+export interface DailySelection {
+  date: string;
+  selectionCount: number;
+}
+
+/**
  * 论文 Service
  */
 export const thesisService = {
@@ -39,5 +47,13 @@ export const thesisService = {
    */
   getRanking: (): Promise<ThesisRanking[]> => {
     return http.get('/internship/statistics/thesis');
+  },
+
+  /**
+   * 获取每日选题趋势
+   * @returns Promise<DailySelection[]>
+   */
+  getDailyTrend: (): Promise<DailySelection[]> => {
+    return http.get('/internship/statistics/daily');
   }
 };
