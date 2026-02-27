@@ -92,7 +92,7 @@
         <el-card class="notice-card" shadow="never">
           <template #header>
             <div class="card-header">
-              <span>最新通知</span>
+              <span>系统公告</span>
             </div>
           </template>
           <div class="notice-list">
@@ -105,12 +105,40 @@
               <span class="notice-text">本周六凌晨2点系统维护</span>
             </div>
             <div class="notice-item">
-              <el-tag type="danger" size="small">紧急</el-tag>
-              <span class="notice-text">请及时处理待办事项</span>
-            </div>
-            <div class="notice-item">
               <el-tag type="info" size="small">公告</el-tag>
               <span class="notice-text">欢迎使用管理系统</span>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 论文选择排名 - 横向柱状图 -->
+    <el-row :gutter="20" class="content-row">
+      <el-col :span="24">
+        <el-card class="ranking-card" shadow="never" v-loading="rankingLoading">
+          <template #header>
+            <div class="card-header">
+              <span>论文选择排名</span>
+            </div>
+          </template>
+          <div class="ranking-chart">
+            <div
+              v-for="(item, index) in thesisRanking"
+              :key="item.thesisId"
+              class="ranking-bar-item"
+            >
+              <div class="ranking-bar-label">{{ item.thesisTitle }}</div>
+              <div class="ranking-bar-wrapper">
+                <div
+                  class="ranking-bar"
+                  :style="getBarStyle(item, index)"
+                  :class="{ 'top-1': index === 0, 'top-2': index === 1, 'top-3': index === 2 }"
+                >
+                  <span v-if="item.selectionCount > 0" class="ranking-bar-text">{{ item.selectionCount }}</span>
+                </div>
+              </div>
+              <div class="ranking-bar-count">{{ item.selectionCount }}/{{ item.maxSelections }}</div>
             </div>
           </div>
         </el-card>
@@ -142,7 +170,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { User, Document, TrendCharts, Bell, Plus, Upload, Download, Delete, Search } from '@element-plus/icons-vue';
-import { selectionService, type SelectionStatistics } from '@/services/internship';
+import { selectionService, type SelectionStatistics, thesisService, type ThesisRanking } from '@/services/internship';
 
 // 统计数据
 const statistics = ref<SelectionStatistics>({
@@ -152,8 +180,12 @@ const statistics = ref<SelectionStatistics>({
   uncompletedCount: 0
 });
 
+// 论文排名数据
+const thesisRanking = ref<ThesisRanking[]>([]);
+
 // 加载状态
 const loading = ref(false);
+const rankingLoading = ref(false);
 
 // 获取统计数据
 const getStatistics = async () => {
@@ -166,9 +198,55 @@ const getStatistics = async () => {
   }
 };
 
+// 获取论文排名
+const getThesisRanking = async () => {
+  rankingLoading.value = true;
+  try {
+    const data = await thesisService.getRanking();
+    // 按已选人数降序排序
+    thesisRanking.value = data.sort((a, b) => b.selectionCount - a.selectionCount);
+  } finally {
+    rankingLoading.value = false;
+  }
+};
+
+// 16色渐变配色方案
+const barColors = [
+  'linear-gradient(90deg, #ff6b6b, #ee5a24)', // 红色
+  'linear-gradient(90deg, #ff9f43, #feca57)', // 橙色
+  'linear-gradient(90deg, #feca57, #ff9ff3)', // 黄粉
+  'linear-gradient(90deg, #ff9ff3, #f368e0)', // 粉色
+  'linear-gradient(90deg, #f368e0, #a55eea)', // 紫粉
+  'linear-gradient(90deg, #a55eea, #8c7ae6)', // 紫色
+  'linear-gradient(90deg, #8c7ae6, #5f27cd)', // 深紫
+  'linear-gradient(90deg, #5f27cd, #341f97)', // 蓝紫
+  'linear-gradient(90deg, #341f97, #0984e3)', // 深蓝
+  'linear-gradient(90deg, #0984e3, #00b894)', // 蓝绿
+  'linear-gradient(90deg, #00b894, #00cec9)', // 青绿
+  'linear-gradient(90deg, #00cec9, #81ecec)', // 青色
+  'linear-gradient(90deg, #81ecec, #74b9ff)', // 浅蓝
+  'linear-gradient(90deg, #74b9ff, #3498db)', // 天蓝
+  'linear-gradient(90deg, #3498db, #1abc9c)', // 青蓝
+  'linear-gradient(90deg, #1abc9c, #16a085)', // 绿色
+];
+
+// 获取柱状图样式
+const getBarStyle = (item: ThesisRanking, index: number) => {
+  const width = Math.round((item.selectionCount / item.maxSelections) * 100);
+  // 前3名使用特殊样式，其他使用配色方案
+  if (index < 3) {
+    return { width: width + '%' };
+  }
+  return {
+    width: width + '%',
+    background: barColors[index % barColors.length],
+  };
+};
+
 // 生命周期
 onMounted(() => {
   getStatistics();
+  getThesisRanking();
 });
 </script>
 

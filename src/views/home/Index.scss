@@ -72,6 +72,7 @@
 
 .chart-card,
 .notice-card,
+.ranking-card,
 .quick-card {
   border-radius: 8px;
 }
@@ -125,10 +126,93 @@
   color: #8c8c8c;
 }
 
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 6px;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.ranking-item:hover {
+  background-color: #f0f0f0;
+  transform: translateX(4px);
+}
+
+.ranking-number {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  background-color: #d9d9d9;
+  flex-shrink: 0;
+}
+
+.ranking-number.top-1 {
+  background: linear-gradient(135deg, #fadb14, #ffec3d);
+  color: #874d00;
+}
+
+.ranking-number.top-2 {
+  background: linear-gradient(135deg, #bfbfbf, #d9d9d9);
+  color: #434343;
+}
+
+.ranking-number.top-3 {
+  background: linear-gradient(135deg, #d48806, #faad14);
+  color: #fff;
+}
+
+.ranking-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ranking-title {
+  font-size: 14px;
+  color: #262626;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ranking-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.ranking-progress :deep(.el-progress) {
+  flex: 1;
+}
+
+.ranking-count {
+  font-weight: 500;
+  color: #1890ff;
+  white-space: nowrap;
+}
+
+/* 公告列表样式 */
 .notice-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
 }
 
 .notice-item {
@@ -152,6 +236,107 @@
   flex: 1;
 }
 
+/* 横向柱状图 - 论文排名 */
+.ranking-chart {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  padding: 8px 0;
+}
+
+.ranking-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.ranking-bar-item:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.ranking-bar-label {
+  width: 100px;
+  font-size: 13px;
+  color: #262626;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+}
+
+.ranking-bar-wrapper {
+  flex: 1;
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ranking-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #69c0ff, #1890ff);
+  border-radius: 10px;
+  transition: width 0.6s ease, background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  min-width: 4px;
+}
+
+.ranking-bar.top-1 {
+  background: linear-gradient(90deg, #ffd700, #ffb700) !important;
+  box-shadow: 0 2px 8px rgba(255, 183, 0, 0.4);
+}
+
+.ranking-bar.top-2 {
+  background: linear-gradient(90deg, #e8e8e8, #c0c0c0) !important;
+  box-shadow: 0 2px 8px rgba(192, 192, 192, 0.4);
+}
+
+.ranking-bar.top-3 {
+  background: linear-gradient(90deg, #ff9f43, #cd7f32) !important;
+  box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4);
+}
+
+.ranking-bar-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.ranking-bar.top-1 .ranking-bar-text {
+  color: #7c4a00;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.ranking-bar.top-2 .ranking-bar-text {
+  color: #555;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.ranking-bar.top-3 .ranking-bar-text {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.ranking-bar-count {
+  width: 50px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #8c8c8c;
+  text-align: right;
+  flex-shrink: 0;
+}
+
 .quick-actions {
   display: flex;
   gap: 16px;
@@ -163,6 +348,12 @@
   padding: 12px 20px;
 }
 
+@media (max-width: 1200px) {
+  .ranking-chart {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .dashboard {
     padding: 12px;
@@ -172,6 +363,15 @@
     flex-direction: column;
     text-align: center;
     gap: 8px;
+  }
+
+  .ranking-chart {
+    grid-template-columns: 1fr;
+  }
+
+  .ranking-bar-label {
+    width: 80px;
+    font-size: 12px;
   }
 
   .quick-actions {

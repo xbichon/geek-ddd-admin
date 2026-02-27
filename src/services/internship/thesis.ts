@@ -12,6 +12,16 @@ export interface ThesisItem {
 }
 
 /**
+ * 论文选择排名
+ */
+export interface ThesisRanking {
+  thesisId: number;
+  thesisTitle: string;
+  selectionCount: number;
+  maxSelections: number;
+}
+
+/**
  * 论文 Service
  */
 export const thesisService = {
@@ -21,5 +31,13 @@ export const thesisService = {
    */
   getList: (): Promise<ThesisItem[]> => {
     return http.get('/internship/thesis/list');
+  },
+
+  /**
+   * 获取论文选择排名
+   * @returns Promise<ThesisRanking[]>
+   */
+  getRanking: (): Promise<ThesisRanking[]> => {
+    return http.get('/internship/statistics/thesis');
   }
 };

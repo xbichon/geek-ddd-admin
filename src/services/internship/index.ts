@@ -13,6 +13,6 @@ export { selectionService } from './selection';
 export { internService } from './intern';
 
 // 类型导出
-export type { ThesisItem } from './thesis';
+export type { ThesisItem, ThesisRanking } from './thesis';
 export type { SelectionRecord, SelectionQuery, SelectionStatistics } from './selection';
 export type { InternItem, InternQuery } from './intern';
