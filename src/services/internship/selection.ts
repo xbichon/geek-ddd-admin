@@ -1,5 +1,16 @@
+import { http } from '@/utils/http';
 import { fetchPage } from '@/utils/pagination';
 import type { PageData, PageQuery } from '@/utils/pagination';
+
+/**
+ * 选题统计数据
+ */
+export interface SelectionStatistics {
+  totalCount: number;
+  selectedCount: number;
+  completionRate: number;
+  uncompletedCount: number;
+}
 
 /**
  * 选题记录
@@ -38,5 +49,12 @@ export const selectionService = {
    * @returns Promise<PageData<SelectionRecord>>
    */
   getList: (params: SelectionQuery = {}): Promise<PageData<SelectionRecord>> =>
-    fetchPage<SelectionRecord, SelectionQuery>('/internship/selection/list', params)
+    fetchPage<SelectionRecord, SelectionQuery>('/internship/selection/list', params),
+
+  /**
+   * 获取选题统计数据
+   * @returns Promise<SelectionStatistics>
+   */
+  getStatistics: (): Promise<SelectionStatistics> =>
+    http.get('/internship/statistics/selection')
 };
