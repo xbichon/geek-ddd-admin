@@ -119,7 +119,7 @@
         <el-card class="ranking-card" shadow="never" v-loading="rankingLoading">
           <template #header>
             <div class="card-header">
-              <span>论文选择排名</span>
+              <span>选题方向排名</span>
             </div>
           </template>
           <div class="ranking-chart">
@@ -145,25 +145,6 @@
       </el-col>
     </el-row>
 
-    <!-- 快捷操作区域 -->
-    <el-row :gutter="20" class="quick-row">
-      <el-col :span="24">
-        <el-card class="quick-card" shadow="never">
-          <template #header>
-            <div class="card-header">
-              <span>快捷操作</span>
-            </div>
-          </template>
-          <div class="quick-actions">
-            <el-button type="primary" :icon="Plus">新增用户</el-button>
-            <el-button type="success" :icon="Upload">导入数据</el-button>
-            <el-button type="warning" :icon="Download">导出报表</el-button>
-            <el-button type="danger" :icon="Delete">批量删除</el-button>
-            <el-button type="info" :icon="Search">查询统计</el-button>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
   </div>
 </template>
 
