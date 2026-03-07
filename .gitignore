@@ -39,4 +39,4 @@ coverage/
 
 # Other
 *.tsbuildinfo
-.claude/settings.local.json
+.claude/settings.json
